@@ -6,8 +6,6 @@ Este documento es una guía para contribuir al repositorio de Back-Jewelry. Incl
 
 Actualmente, estamos usando Node.js, Express y TypeScript. La razón principal de esto es que estamos buscando una base de código escalable y mantenible.
 
-````mermaid
-
 ## Desarrollo local
 
 ### Estructura del proyecto
@@ -70,4 +68,7 @@ El nuevo código o PR que se va a fusionar debe seguir esta dirección
 Title: Feature: Added Auth module
 Description: empty or if you want could add something that help us to clarify some point
 ```
-````
+
+```
+
+```
