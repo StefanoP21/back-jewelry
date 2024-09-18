@@ -1,4 +1,9 @@
 node_modules/
 .idea/
 
+# Folder
+dist/
+coverage/
+
+# Files
 .env
