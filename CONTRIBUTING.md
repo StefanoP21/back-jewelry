@@ -23,7 +23,6 @@ graph TB;
   auth-->domain;
   auth-->infrastructure;
   auth-->presentation;
-  features-->shared;
 ```
 
 ### Entornos
