@@ -24,8 +24,7 @@ graph TB;
   auth-->infrastructure;
   auth-->presentation;
   features-->shared;
-
-````
+```
 
 ### Entornos
 
@@ -72,3 +71,4 @@ El nuevo código o PR que se va a fusionar debe seguir esta dirección
 Title: Feature: Added Auth module
 Description: empty or if you want could add something that help us to clarify some point
 ```
+````
