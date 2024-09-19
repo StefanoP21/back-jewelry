@@ -1,5 +1,5 @@
-describe("app.ts", () => {
-  it("should return true", () => {
+describe('app.ts', () => {
+  it('should return true', () => {
     expect(true).toBe(true);
   });
 });
