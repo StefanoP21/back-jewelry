@@ -59,4 +59,3 @@ Scope hace referencia a la carpeta de primer nivel en donde se hace el cambio .
 
 1. Si el commit no tiene concordancia , tanto en ambito como tipo , el PR no sera aceptado ,de esta manera evitaremos merge en proyectos que no correspondan.
 2. Cuando el tipo y el ambito poseen el mismo nombre , no es necesario colocar el ambito (ej:docs)
-3.
