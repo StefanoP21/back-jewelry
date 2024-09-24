@@ -1,5 +1,0 @@
-node_modules
-dist
-coverage
-.husky
-commitlint.config.js
