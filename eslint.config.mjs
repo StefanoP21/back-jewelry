@@ -54,10 +54,10 @@ export default [
 			'no-unused-vars': 'off',
 			'no-magic-numbers': 'off',
 			'@typescript-eslint/no-unused-vars': 'error',
-			'@typescript-eslint/explicit-function-return-type': 'error',
+			'@typescript-eslint/explicit-function-return-type': 'off',
 			'@typescript-eslint/strict-boolean-expressions': 'off',
 			'@typescript-eslint/no-extraneous-class': 'off',
-			'@typescript-eslint/no-magic-numbers': 'error',
+			'@typescript-eslint/no-magic-numbers': 'off',
 			'@typescript-eslint/no-unsafe-argument': 'off'
 		}
 	}
