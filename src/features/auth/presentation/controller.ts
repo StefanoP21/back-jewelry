@@ -5,21 +5,24 @@ import {
 	LoginUser,
 	LoginUserDto,
 	RegisterUser,
-	RegisterUserDto
-	// RenewUser
+	RegisterUserDto,
+	RenewUser
 } from '../domain';
 import { HttpCode, SuccessResponse } from '../../../core';
 
+type Role = 'ADMIN' | 'USER';
+
 interface RequestBodyLogin {
-	email: string;
+	dni: string;
 	password: string;
 }
 
 interface RequestBodyRegister {
 	name: string;
 	lastname: string;
-	email: string;
+	dni: string;
 	password: string;
+	role: Role;
 }
 
 export class AuthController {
@@ -30,12 +33,13 @@ export class AuthController {
 		res: Response<SuccessResponse<AuthEntity>>,
 		next: NextFunction
 	) => {
-		const { name, lastname, email, password } = req.body;
+		const { name, lastname, dni, password, role } = req.body;
 		const registerUserDto = RegisterUserDto.create({
 			name,
 			lastname,
-			email,
-			password
+			dni,
+			password,
+			role
 		});
 
 		new RegisterUser(this.repository)
@@ -49,11 +53,20 @@ export class AuthController {
 		res: Response<SuccessResponse<AuthEntity>>,
 		next: NextFunction
 	) => {
-		const { email, password } = req.body;
-		const loginUserDto = LoginUserDto.create({ email, password });
+		const { dni, password } = req.body;
+		const loginUserDto = LoginUserDto.create({ dni, password });
 
 		new LoginUser(this.repository)
 			.execute(loginUserDto)
+			.then((result) => res.status(HttpCode.OK).json({ data: result }))
+			.catch(next);
+	};
+
+	public renewUser = (req: Request, res: Response<SuccessResponse<AuthEntity>>, next: NextFunction) => {
+		const dni = req.body.data.dni;
+
+		new RenewUser(this.repository)
+			.execute(dni)
 			.then((result) => res.status(HttpCode.OK).json({ data: result }))
 			.catch(next);
 	};

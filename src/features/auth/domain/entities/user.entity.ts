@@ -1,18 +1,27 @@
 import { CustomError, ZERO } from '../../../../core';
 
+type Role = 'ADMIN' | 'USER';
+
+interface UserEntityProps {
+	id: number;
+	name: string;
+	lastname: string;
+	dni: string;
+	password: string;
+	role: Role;
+}
 export class UserEntity {
 	constructor(
-		public id: string,
+		public id: number,
 		public name: string,
 		public lastname: string,
-		public email: string,
-		public password: string
+		public dni: string,
+		public password: string,
+		public role: Role
 	) {}
 
-	// TODO: REQVIEW TYPE
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	static fromObject(object: Record<string, any>): UserEntity {
-		const { id, name, lastname, email, password } = object;
+	static fromObject(object: UserEntityProps): UserEntity {
+		const { id, name, lastname, dni, password, role } = object;
 
 		if (!id)
 			throw CustomError.badRequest('This entity requires an id', [{ constraint: 'id is required', fields: ['id'] }]);
@@ -27,16 +36,19 @@ export class UserEntity {
 				{ constraint: 'lastname is required', fields: ['lastname'] }
 			]);
 
-		if (!email || email.length === ZERO)
-			throw CustomError.badRequest('This entity requires an email', [
-				{ constraint: 'email is required', fields: ['email'] }
-			]);
+		if (!dni || dni.length === ZERO)
+			throw CustomError.badRequest('This entity requires an dni', [{ constraint: 'dni is required', fields: ['dni'] }]);
 
 		if (!password || password.length === ZERO)
 			throw CustomError.badRequest('This entity requires a password', [
 				{ constraint: 'password is required', fields: ['password'] }
 			]);
 
-		return new UserEntity(id, name, lastname, email, password);
+		if (!role || role.length === ZERO)
+			throw CustomError.badRequest('This entity requires a role', [
+				{ constraint: 'role is required', fields: ['role'] }
+			]);
+
+		return new UserEntity(id, name, lastname, dni, password, role);
 	}
 }

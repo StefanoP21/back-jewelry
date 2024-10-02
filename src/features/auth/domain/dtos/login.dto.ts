@@ -1,9 +1,14 @@
-import { CustomError, REGEX_EMAIL, SIX, type ValidationType, ZERO } from '../../../../core';
+import { CustomError, NINE, SIX, type ValidationType, ZERO } from '../../../../core';
 import { type CoreDto } from '../../../shared';
+
+interface LoginUserDtoProps {
+	dni: string;
+	password: string;
+}
 
 export class LoginUserDto implements CoreDto<LoginUserDto> {
 	private constructor(
-		public readonly email: string,
+		public readonly dni: string,
 		public readonly password: string
 	) {
 		this.validate(this);
@@ -11,18 +16,18 @@ export class LoginUserDto implements CoreDto<LoginUserDto> {
 
 	public validate(dto: LoginUserDto): void {
 		const errors: ValidationType[] = [];
-		const { email, password } = dto;
+		const { dni, password } = dto;
 
-		if (!email)
+		if (!dni)
 			errors.push({
-				constraint: 'El correo es obligatorio',
-				fields: ['email']
+				constraint: 'El dni es obligatorio',
+				fields: ['dni']
 			});
 
-		if (!REGEX_EMAIL.test(email))
+		if (dni.length === NINE)
 			errors.push({
-				constraint: 'El correo es inválido',
-				fields: ['email']
+				constraint: 'El dni debe tener 9 caracteres',
+				fields: ['dni']
 			});
 
 		if (!password)
@@ -40,9 +45,9 @@ export class LoginUserDto implements CoreDto<LoginUserDto> {
 		if (errors.length > ZERO) throw CustomError.badRequest('Error validando la información de usuario', errors);
 	}
 
-	static create(object: Record<string, string>): LoginUserDto {
-		const { email, password } = object;
+	static create(object: LoginUserDtoProps): LoginUserDto {
+		const { dni, password } = object;
 
-		return new LoginUserDto(email, password);
+		return new LoginUserDto(dni, password);
 	}
 }
