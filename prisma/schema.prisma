@@ -1,35 +1,142 @@
 generator client {
-  provider = "prisma-client-js"
+   provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("POSTGRESQL_URL")
+   provider = "postgresql"
+   url      = env("POSTGRESQL_URL")
 }
 
 enum Role {
-  ADMIN
-  USER
+   ADMIN
+   USER
+}
+
+enum PaymentMethod {
+   CASH
+   CARD
+   YAPE
+   PLIN
+   TRANSFER
 }
 
 model User {
-  id        Int       @id @default(autoincrement())
-  name      String
-  lastname  String
-  dni       String    @unique
-  password  String
-  role      Role      @default(USER)
-  createdAt DateTime  @default(now())
-  updatedAt DateTime? @updatedAt
+   id        Int       @id @default(autoincrement())
+   name      String
+   lastname  String
+   dni       String    @unique
+   password  String
+   role      Role      @default(USER)
+   createdAt DateTime  @default(now())
+   updatedAt DateTime? @updatedAt
+
+   order Order[]
 }
 
 model Customer {
-  id        Int       @id @default(autoincrement())
-  name      String
-  lastName  String
-  email     String
-  dni       String    @unique
-  phone     String
-  createdAt DateTime  @default(now())
-  updatedAt DateTime? @updatedAt
+   id        Int       @id @default(autoincrement())
+   name      String
+   lastName  String
+   email     String
+   dni       String    @unique
+   phone     String
+   createdAt DateTime  @default(now())
+   updatedAt DateTime? @updatedAt
+
+   Order Order[]
+}
+
+model Supplier {
+   id          Int      @id @default(autoincrement())
+   name        String
+   email       String
+   phone       String
+   razonSocial String
+   ruc         String
+   createdAt   DateTime @default(now())
+
+   purchase Purchase[]
+}
+
+model Category {
+   id   Int    @id @default(autoincrement())
+   name String
+
+   product Product[]
+}
+
+model Product {
+   id          Int      @id @default(autoincrement())
+   name        String
+   description String
+   categoryId  Int
+   image       String
+   material    String
+   price       Decimal
+   stock       Int
+   createdAt   DateTime @default(now())
+
+   category       Category         @relation(fields: [categoryId], references: [id])
+   orderDetail    OrderDetail[]
+   purchaseDetail PurchaseDetail[]
+   refund         Refund[]
+}
+
+model Purchase {
+   id         Int      @id @default(autoincrement())
+   supplierId Int
+   date       DateTime @default(now())
+   total      Decimal
+
+   supplier       Supplier         @relation(fields: [supplierId], references: [id])
+   purchaseDetail PurchaseDetail[]
+   refund         Refund[]
+}
+
+model Order {
+   id            Int           @id @default(autoincrement())
+   customerId    Int
+   userId        Int
+   date          DateTime      @default(now())
+   paymentMethod PaymentMethod @default(CASH)
+   totalDesc     Decimal
+   total         Decimal
+
+   customer    Customer      @relation(fields: [customerId], references: [id])
+   user        User          @relation(fields: [userId], references: [id])
+   orderDetail OrderDetail[]
+}
+
+model OrderDetail {
+   id        Int     @id @default(autoincrement())
+   OrderId   Int
+   productId Int
+   quantity  Int
+   unitPrice Decimal
+
+   order   Order   @relation(fields: [OrderId], references: [id])
+   product Product @relation(fields: [productId], references: [id])
+}
+
+model PurchaseDetail {
+   id         Int     @id @default(autoincrement())
+   PurchaseId Int
+   productId  Int
+   quantity   Int
+   unitPrice  Decimal
+
+   purchase Purchase @relation(fields: [PurchaseId], references: [id])
+   product  Product  @relation(fields: [productId], references: [id])
+}
+
+model Refund {
+   id         Int      @id @default(autoincrement())
+   PurchaseId Int
+   productId  Int
+   quantity   Int
+   date       DateTime @default(now())
+   reason     String
+
+   purchase Purchase @relation(fields: [PurchaseId], references: [id])
+   product  Product  @relation(fields: [productId], references: [id])
 }
