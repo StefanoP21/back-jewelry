@@ -5,7 +5,7 @@ import { CustomError, envs, JwtAdapter, ONE } from '../../../../core';
 export class AuthMiddleware {
 	constructor(private readonly repository: AuthRepository) {}
 
-	public async validateJWT(req: Request, _res: Response, next: NextFunction) {
+	public validateJWT = async (req: Request, _res: Response, next: NextFunction): Promise<void> => {
 		const authorization = req.header('Authorization');
 		if (!authorization) throw CustomError.unauthorized('No hay un token en la petición');
 
@@ -26,5 +26,5 @@ export class AuthMiddleware {
 				next();
 			})
 			.catch(next);
-	}
+	};
 }

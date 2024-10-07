@@ -1,8 +1,13 @@
-import { NextFunction, Request, Response } from 'express';
-import { CustomError, HttpCode } from '../../../../core';
+import { type NextFunction, type Request, type Response } from 'express';
+import { type ErrorResponse, CustomError, HttpCode } from '../../../../core';
 
 export class ErrorMiddleware {
-	public static handleError = (error: unknown, _req: Request, res: Response, next: NextFunction): void => {
+	public static handleError = (
+		error: unknown,
+		_req: Request,
+		res: Response<ErrorResponse>,
+		next: NextFunction
+	): void => {
 		if (error instanceof CustomError) {
 			const { name, message, stack, validationErrors } = error;
 			const statusCode = error.statusCode || HttpCode.INTERNAL_SERVER_ERROR;

@@ -17,7 +17,7 @@ export class AuthRepositoryImpl implements AuthRepository {
 		return this.datasource.login(dto);
 	}
 
-	renew(id: string): Promise<AuthEntity> {
-		return this.datasource.renew(id);
+	renew(dni: string): Promise<AuthEntity> {
+		return this.datasource.renew(dni);
 	}
 }

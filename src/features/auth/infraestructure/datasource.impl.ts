@@ -1,8 +1,16 @@
-import { BcryptAdapter, CustomError, envs, JwtAdapter } from '../../../core';
+import { CustomError, envs, JwtAdapter } from '../../../core';
 import { prisma } from '../../../data/postgresql';
 import { AuthEntity, UserEntity, type AuthDatasource, type LoginUserDto, type RegisterUserDto } from '../domain';
 
+type Hash = (password: string) => string;
+type Compare = (password: string, hash: string) => boolean;
+
 export class AuthDatasourceImpl implements AuthDatasource {
+	constructor(
+		private readonly hash: Hash,
+		private readonly compare: Compare
+	) {}
+
 	private async handleToken(dni: string): Promise<string> {
 		const jwtAdapter = new JwtAdapter(envs.JWT_SEED);
 		const token = await jwtAdapter.generateToken<string>({ dni });
@@ -20,7 +28,7 @@ export class AuthDatasourceImpl implements AuthDatasource {
 		const user = await prisma.user.create({ data: dto });
 
 		//* encrypt password
-		user.password = BcryptAdapter.hash(dto.password);
+		user.password = this.hash(dto.password);
 
 		await prisma.user.update({ where: { id: user.id }, data: { password: user.password } });
 
@@ -37,8 +45,8 @@ export class AuthDatasourceImpl implements AuthDatasource {
 		if (!user) throw CustomError.badRequest('Usuario no encontrado');
 
 		//* validate password
-		const passwordIsValid = BcryptAdapter.compare(dto.password, user.password);
-		if (!passwordIsValid) throw CustomError.badRequest('Contraseña incorrecta');
+		const passwordIsValid = this.compare(dto.password, user.password);
+		if (!passwordIsValid) throw CustomError.badRequest('Credenciales incorrectas');
 
 		const { password, ...rest } = UserEntity.fromObject(user);
 

@@ -63,7 +63,7 @@ export class AuthController {
 	};
 
 	public renewUser = (req: Request, res: Response<SuccessResponse<AuthEntity>>, next: NextFunction) => {
-		const dni = req.body.data.dni;
+		const { dni } = req.body.data.user;
 
 		new RenewUser(this.repository)
 			.execute(dni)

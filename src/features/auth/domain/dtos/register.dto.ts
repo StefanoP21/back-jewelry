@@ -1,4 +1,4 @@
-import { CustomError, NINE, SIX, type ValidationType, ZERO } from '../../../../core';
+import { CustomError, EIGHT, SIX, type ValidationType, ZERO } from '../../../../core';
 import { type CoreDto } from '../../../shared';
 
 type Role = 'ADMIN' | 'USER';
@@ -38,33 +38,22 @@ export class RegisterUserDto implements CoreDto<RegisterUserDto> {
 				fields: ['lastname']
 			});
 
-		if (!dni)
+		if (!dni || dni.length !== EIGHT)
 			errors.push({
-				constraint: 'El dni es obligatorio',
+				constraint: 'El dni no es válido',
 				fields: ['dni']
 			});
 
-		if (dni.length === NINE)
+		if (!password || password.length < SIX)
 			errors.push({
-				constraint: 'El dni debe tener 9 caracteres',
-				fields: ['dni']
-			});
-
-		if (!password)
-			errors.push({
-				constraint: 'La contraseña es obligatoria',
+				constraint: 'La contraseña no es válida',
 				fields: ['password']
 			});
 
-		if (password.length < SIX)
+		const validRoles = ['ADMIN', 'USER'];
+		if (!role || !validRoles.includes(role))
 			errors.push({
-				constraint: 'La contraseña debe tener al menos 6 caracteres',
-				fields: ['password']
-			});
-
-		if (!role || role.length === ZERO)
-			errors.push({
-				constraint: 'El rol es obligatorio',
+				constraint: 'El rol no es válido',
 				fields: ['role']
 			});
 
