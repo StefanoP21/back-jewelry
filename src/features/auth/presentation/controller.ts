@@ -6,11 +6,19 @@ import {
 	LoginUserDto,
 	RegisterUser,
 	RegisterUserDto,
+	UpdatePasswordUser,
+	UpdatePasswordUserDto,
 	RenewUser
 } from '../domain';
 import { HttpCode, SuccessResponse } from '../../../core';
 
 type Role = 'ADMIN' | 'USER';
+
+interface RequestBodyUpdatePassword {
+	dni: string;
+	password: string;
+	newPassword: string;
+}
 
 interface RequestBodyLogin {
 	dni: string;
@@ -59,6 +67,20 @@ export class AuthController {
 		new LoginUser(this.repository)
 			.execute(loginUserDto)
 			.then((result) => res.status(HttpCode.OK).json({ data: result }))
+			.catch(next);
+	};
+
+	public updatePassword = (
+		req: Request<unknown, unknown, RequestBodyUpdatePassword>,
+		res: Response<unknown>,
+		next: NextFunction
+	) => {
+		const { dni, password, newPassword } = req.body;
+		const updatePasswordUserDto = UpdatePasswordUserDto.create({ dni, password, newPassword });
+
+		new UpdatePasswordUser(this.repository)
+			.execute(updatePasswordUserDto)
+			.then((result) => res.status(HttpCode.OK).json(result))
 			.catch(next);
 	};
 
