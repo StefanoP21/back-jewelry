@@ -1,4 +1,4 @@
-import { type ProductEntity } from '../entities';
+import { type ProductEntity } from '../entities/product.entity';
 import { type ProductRepository } from '../repository/repository';
 
 export interface GetProductByIdUseCase {
@@ -9,6 +9,6 @@ export class GetProductById implements GetProductByIdUseCase {
 	constructor(private readonly repository: ProductRepository) {}
 
 	execute(id: number): Promise<ProductEntity> {
-		return this.repository.getProductById(id);
+		return this.repository.getById(id);
 	}
 }

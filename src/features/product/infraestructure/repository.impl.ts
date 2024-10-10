@@ -3,23 +3,23 @@ import { ProductDatasource, CreateProductDto, UpdateProductDto, ProductEntity, P
 export class ProductRepositoryImpl implements ProductRepository {
 	constructor(private readonly datasource: ProductDatasource) {}
 
-	getProducts(): Promise<ProductEntity[]> {
-		return this.datasource.getProducts();
+	getAll(): Promise<ProductEntity[]> {
+		return this.datasource.getAll();
 	}
 
-	getProductById(id: number): Promise<ProductEntity> {
-		return this.datasource.getProductById(id);
+	getById(id: number): Promise<ProductEntity> {
+		return this.datasource.getById(id);
 	}
 
-	createProduct(dto: CreateProductDto): Promise<ProductEntity> {
-		return this.datasource.createProduct(dto);
+	create(dto: CreateProductDto): Promise<ProductEntity> {
+		return this.datasource.create(dto);
 	}
 
-	updateProduct(dto: UpdateProductDto): Promise<ProductEntity> {
-		return this.datasource.updateProduct(dto);
+	update(dto: UpdateProductDto): Promise<ProductEntity> {
+		return this.datasource.update(dto);
 	}
 
-	deleteProduct(id: number): Promise<unknown> {
-		return this.datasource.deleteProduct(id);
+	delete(id: number): Promise<ProductEntity> {
+		return this.datasource.delete(id);
 	}
 }

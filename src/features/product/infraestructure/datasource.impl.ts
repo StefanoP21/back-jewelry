@@ -5,43 +5,43 @@ import { ProductEntity, type ProductDatasource, type CreateProductDto, type Upda
 export class ProductDatasourceImpl implements ProductDatasource {
 	constructor() {}
 
-	async getProducts(): Promise<ProductEntity[]> {
-		return (await prisma.product.findMany()).map(ProductEntity.fromObject);
+	async getAll(): Promise<ProductEntity[]> {
+		try {
+			const products = await prisma.product.findMany();
+			return products.map((product) => ProductEntity.fromObject(product));
+		} catch (error) {
+			throw CustomError.internalServer(`Error al obtener los productos: ${error}`);
+		}
 	}
 
-	async getProductById(id: number): Promise<ProductEntity> {
-		const productExist = await prisma.product.findFirst({ where: { id: id } });
-
-		if (!productExist) throw CustomError.notFound('Producto no encontrado');
-
-		const product = ProductEntity.fromObject(productExist);
-
-		return product;
-	}
-
-	async createProduct(dto: CreateProductDto): Promise<ProductEntity> {
-		const product = await prisma.product.create({ data: dto });
-
+	async getById(id: number): Promise<ProductEntity> {
+		const product = await prisma.product.findUnique({ where: { id } });
+		if (!product) throw CustomError.notFound(`Producto con id ${id} no encontrado`);
 		return ProductEntity.fromObject(product);
 	}
 
-	async updateProduct(dto: UpdateProductDto): Promise<ProductEntity> {
-		const productExist = await prisma.product.findFirst({ where: { id: dto.id } });
-
-		if (!productExist) throw CustomError.notFound('Producto no encontrado');
-
-		const product = await prisma.product.update({ where: { id: dto.id }, data: dto });
-
-		return ProductEntity.fromObject(product);
+	async create(dto: CreateProductDto): Promise<ProductEntity> {
+		try {
+			const product = await prisma.product.create({ data: dto });
+			return ProductEntity.fromObject(product);
+		} catch (error) {
+			throw CustomError.internalServer(`Error al crear el producto: ${error}`);
+		}
 	}
 
-	async deleteProduct(id: number): Promise<unknown> {
-		const productExist = prisma.product.findFirst({ where: { id: id } });
+	async update(dto: UpdateProductDto): Promise<ProductEntity> {
+		try {
+			const { id } = await this.getById(dto.id);
+			const product = await prisma.product.update({ where: { id }, data: dto });
+			return ProductEntity.fromObject(product);
+		} catch (error) {
+			throw CustomError.internalServer(`Error al actualizar el producto con id ${dto.id}: ${error}`);
+		}
+	}
 
-		if (!productExist) throw CustomError.notFound('Producto no encontrado');
-
-		await prisma.product.delete({ where: { id: id } });
-
-		return { message: 'Producto eliminado' };
+	async delete(id: number): Promise<ProductEntity> {
+		const { id: productId } = await this.getById(id);
+		const deletedProduct = await prisma.product.delete({ where: { id: productId } });
+		return ProductEntity.fromObject(deletedProduct);
 	}
 }

@@ -1,7 +1,6 @@
 import { Router } from 'express';
 import { ProductController } from './controller';
 import { ProductDatasourceImpl, ProductRepositoryImpl } from '../infraestructure';
-// import { AuthMiddleware } from './middlewares/auth.middleware';
 
 export class ProductRoutes {
 	static get routes(): Router {
@@ -11,11 +10,11 @@ export class ProductRoutes {
 		const repository = new ProductRepositoryImpl(datasource);
 		const controller = new ProductController(repository);
 
-		router.get('/get', controller.getProducts);
-		router.get('/getbyid', controller.getProductById);
-		router.post('/create', controller.createProduct);
-		router.put('/update', controller.updateProduct);
-		router.delete('/delete', controller.deleteProduct);
+		router.get('/', controller.getAll);
+		router.get('/:id', controller.getById);
+		router.post('/', controller.create);
+		router.put('/:id', controller.update);
+		router.delete('/:id', controller.delete);
 
 		return router;
 	}

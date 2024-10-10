@@ -9,7 +9,7 @@ interface ProductEntityProps {
 	image: string;
 	material: string;
 	price: Decimal;
-	stock: number | null;
+	stock: number;
 }
 
 export class ProductEntity {
@@ -21,7 +21,7 @@ export class ProductEntity {
 		public readonly image: string,
 		public readonly material: string,
 		public readonly price: Decimal,
-		public readonly stock: number | null
+		public readonly stock: number
 	) {}
 
 	static fromObject(object: ProductEntityProps): ProductEntity {
@@ -60,7 +60,7 @@ export class ProductEntity {
 				{ constraint: 'price is required', fields: ['price'] }
 			]);
 
-		if (stock === undefined)
+		if (!stock || stock <= ZERO)
 			throw CustomError.badRequest('This entity requires a stock', [
 				{ constraint: 'stock is required', fields: ['stock'] }
 			]);

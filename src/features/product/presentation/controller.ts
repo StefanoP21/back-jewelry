@@ -1,53 +1,57 @@
 import { type Request, type Response, type NextFunction } from 'express';
-import { Decimal } from '../../../data/postgresql';
 import {
 	type ProductEntity,
 	type ProductRepository,
 	CreateProductDto,
 	UpdateProductDto,
-	GetProducts,
+	GetAllProducts,
 	GetProductById,
 	CreateProduct,
 	UpdateProduct,
 	DeleteProduct
 } from '../domain';
-import { HttpCode, SuccessResponse } from '../../../core';
+import { HttpCode, type SuccessResponse } from '../../../core';
+import { Decimal } from '../../../data/postgresql';
 
-interface RequestBodyProduct {
-	id: number;
+interface Params {
+	id: string;
+}
+
+interface RequestBody {
 	name: string;
 	description: string;
 	categoryId: number;
 	image: string;
 	material: string;
 	price: Decimal;
+	stock: null;
 }
 
 export class ProductController {
 	constructor(private readonly repository: ProductRepository) {}
 
-	public getProducts = (_req: Request, res: Response<SuccessResponse<ProductEntity[]>>, next: NextFunction) => {
-		new GetProducts(this.repository)
+	public getAll = (_req: Request, res: Response<SuccessResponse<ProductEntity[]>>, next: NextFunction) => {
+		new GetAllProducts(this.repository)
 			.execute()
 			.then((result) => res.status(HttpCode.OK).json({ data: result }))
 			.catch(next);
 	};
 
-	public getProductById = (req: Request, res: Response<SuccessResponse<ProductEntity>>, next: NextFunction) => {
-		const { id } = req.body;
+	public getById = (req: Request, res: Response<SuccessResponse<ProductEntity>>, next: NextFunction) => {
+		const { id } = req.params;
 
 		new GetProductById(this.repository)
-			.execute(id)
+			.execute(Number(id))
 			.then((result) => res.status(HttpCode.OK).json({ data: result }))
 			.catch(next);
 	};
 
-	public createProduct = (
-		req: Request<unknown, unknown, RequestBodyProduct>,
+	public create = (
+		req: Request<unknown, unknown, RequestBody>,
 		res: Response<SuccessResponse<ProductEntity>>,
 		next: NextFunction
 	) => {
-		const { name, description, categoryId, image, material, price } = req.body;
+		const { name, description, categoryId, image, material, price, stock } = req.body;
 
 		const createProductDto = CreateProductDto.create({
 			name,
@@ -55,7 +59,8 @@ export class ProductController {
 			categoryId,
 			image,
 			material,
-			price
+			price,
+			stock: Number(stock)
 		});
 
 		new CreateProduct(this.repository)
@@ -64,21 +69,23 @@ export class ProductController {
 			.catch(next);
 	};
 
-	public updateProduct = (
-		req: Request<unknown, unknown, RequestBodyProduct>,
+	public update = (
+		req: Request<Params, unknown, RequestBody>,
 		res: Response<SuccessResponse<ProductEntity>>,
 		next: NextFunction
 	) => {
-		const { id, name, description, categoryId, image, material, price } = req.body;
+		const { id } = req.params;
+		const { name, description, categoryId, image, material, price, stock } = req.body;
 
 		const updateProductDto = UpdateProductDto.create({
-			id,
+			id: Number(id),
 			name,
 			description,
 			categoryId,
 			image,
 			material,
-			price
+			price,
+			stock: Number(stock)
 		});
 
 		new UpdateProduct(this.repository)
@@ -87,12 +94,12 @@ export class ProductController {
 			.catch(next);
 	};
 
-	public deleteProduct = (req: Request, res: Response<unknown>, next: NextFunction) => {
-		const { id } = req.body;
+	public delete = (req: Request<Params>, res: Response<SuccessResponse<ProductEntity>>, next: NextFunction) => {
+		const { id } = req.params;
 
 		new DeleteProduct(this.repository)
-			.execute(id)
-			.then((result) => res.status(HttpCode.OK).json(result))
+			.execute(Number(id))
+			.then((result) => res.status(HttpCode.OK).json({ data: result }))
 			.catch(next);
 	};
 }

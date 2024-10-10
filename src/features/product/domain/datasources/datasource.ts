@@ -1,10 +1,10 @@
-import { type ProductEntity } from '../entities/product.entity';
 import { type CreateProductDto, type UpdateProductDto } from '../dtos';
+import { type ProductEntity } from '../entities/product.entity';
 
 export abstract class ProductDatasource {
-	abstract getProducts(): Promise<ProductEntity[]>;
-	abstract getProductById(id: number): Promise<ProductEntity>;
-	abstract createProduct(dto: CreateProductDto): Promise<ProductEntity>;
-	abstract updateProduct(dto: UpdateProductDto): Promise<ProductEntity>;
-	abstract deleteProduct(id: number): Promise<unknown>;
+	abstract create(dto: CreateProductDto): Promise<ProductEntity>;
+	abstract getAll(): Promise<ProductEntity[]>;
+	abstract getById(id: number): Promise<ProductEntity>;
+	abstract update(dto: UpdateProductDto): Promise<ProductEntity>;
+	abstract delete(id: number): Promise<ProductEntity>;
 }

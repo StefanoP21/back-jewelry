@@ -10,6 +10,7 @@ interface UpdateProductDtoProps {
 	image?: string;
 	material?: string;
 	price?: Decimal;
+	stock?: number;
 }
 
 export class UpdateProductDto implements CoreDto<UpdateProductDto> {
@@ -20,7 +21,8 @@ export class UpdateProductDto implements CoreDto<UpdateProductDto> {
 		public readonly categoryId?: number,
 		public readonly image?: string,
 		public readonly material?: string,
-		public readonly price?: Decimal
+		public readonly price?: Decimal,
+		public readonly stock?: number
 	) {
 		this.validate(this);
 	}
@@ -29,9 +31,9 @@ export class UpdateProductDto implements CoreDto<UpdateProductDto> {
 		const errors: ValidationType[] = [];
 		const { id } = dto;
 
-		if (!id)
+		if (!id || isNaN(id))
 			errors.push({
-				constraint: 'El id es obligatorio',
+				constraint: 'El id no es un número válido',
 				fields: ['id']
 			});
 
@@ -39,8 +41,8 @@ export class UpdateProductDto implements CoreDto<UpdateProductDto> {
 	}
 
 	static create(object: UpdateProductDtoProps): UpdateProductDto {
-		const { id, name, description, categoryId, image, material, price } = object;
+		const { id, name, description, categoryId, image, material, price, stock } = object;
 
-		return new UpdateProductDto(id, name, description, categoryId, image, material, price);
+		return new UpdateProductDto(id, name, description, categoryId, image, material, price, stock);
 	}
 }

@@ -9,6 +9,7 @@ interface CreateProductDtoProps {
 	image: string;
 	material: string;
 	price: Decimal;
+	stock: number;
 }
 
 export class CreateProductDto implements CoreDto<CreateProductDto> {
@@ -18,14 +19,15 @@ export class CreateProductDto implements CoreDto<CreateProductDto> {
 		public readonly categoryId: number,
 		public readonly image: string,
 		public readonly material: string,
-		public readonly price: Decimal
+		public readonly price: Decimal,
+		public readonly stock: number
 	) {
 		this.validate(this);
 	}
 
 	public validate(dto: CreateProductDto): void {
 		const errors: ValidationType[] = [];
-		const { name, description, categoryId, image, material, price } = dto;
+		const { name, description, categoryId, image, material, price, stock } = dto;
 
 		if (!name || name.length === ZERO)
 			errors.push({
@@ -63,12 +65,18 @@ export class CreateProductDto implements CoreDto<CreateProductDto> {
 				fields: ['price']
 			});
 
+		if (!stock || stock < ZERO)
+			errors.push({
+				constraint: 'El stock es obligatorio',
+				fields: ['stock']
+			});
+
 		if (errors.length > ZERO) throw CustomError.badRequest('Error validando el producto', errors);
 	}
 
 	static create(object: CreateProductDtoProps): CreateProductDto {
-		const { name, description, categoryId, image, material, price } = object;
+		const { name, description, categoryId, image, material, price, stock } = object;
 
-		return new CreateProductDto(name, description, categoryId, image, material, price);
+		return new CreateProductDto(name, description, categoryId, image, material, price, stock);
 	}
 }
