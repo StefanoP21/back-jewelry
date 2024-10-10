@@ -24,6 +24,7 @@ model User {
   id        Int       @id @default(autoincrement())
   name      String
   lastname  String
+  email     String
   dni       String    @unique
   password  String
   role      Role      @default(USER)
@@ -47,34 +48,38 @@ model Customer {
 }
 
 model Supplier {
-  id          Int      @id @default(autoincrement())
-  name        String
+  id          Int       @id @default(autoincrement())
+  nameContact String
   email       String
   phone       String
   razonSocial String
   ruc         String
-  createdAt   DateTime @default(now())
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime? @updatedAt
 
   purchase Purchase[]
 }
 
 model Category {
-  id   Int    @id @default(autoincrement())
-  name String
+  id        Int       @id @default(autoincrement())
+  name      String
+  createdAt DateTime  @default(now())
+  updatedAt DateTime? @updatedAt
 
   product Product[]
 }
 
 model Product {
-  id          Int      @id @default(autoincrement())
+  id          Int       @id @default(autoincrement())
   name        String
   description String
   categoryId  Int
   image       String
   material    String
   price       Decimal
-  stock       Int      @default(0)
-  createdAt   DateTime @default(now())
+  stock       Int?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime? @updatedAt
 
   category       Category         @relation(fields: [categoryId], references: [id])
   orderDetail    OrderDetail[]
@@ -83,10 +88,12 @@ model Product {
 }
 
 model Purchase {
-  id         Int      @id @default(autoincrement())
+  id         Int       @id @default(autoincrement())
   supplierId Int
-  date       DateTime @default(now())
+  date       DateTime  @default(now())
   total      Decimal
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime? @updatedAt
 
   supplier       Supplier         @relation(fields: [supplierId], references: [id])
   purchaseDetail PurchaseDetail[]
@@ -101,6 +108,8 @@ model Order {
   paymentMethod PaymentMethod @default(CASH)
   totalDesc     Decimal
   total         Decimal
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime?     @updatedAt
 
   customer    Customer      @relation(fields: [customerId], references: [id])
   user        User          @relation(fields: [userId], references: [id])
@@ -130,12 +139,14 @@ model PurchaseDetail {
 }
 
 model Refund {
-  id         Int      @id @default(autoincrement())
+  id         Int       @id @default(autoincrement())
   PurchaseId Int
   productId  Int
   quantity   Int
-  date       DateTime @default(now())
-  reason     String
+  date       DateTime  @default(now())
+  comment    String
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime? @updatedAt
 
   purchase Purchase @relation(fields: [PurchaseId], references: [id])
   product  Product  @relation(fields: [productId], references: [id])

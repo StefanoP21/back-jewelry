@@ -1,1 +1,2 @@
-export { ProductDto } from './product.dto';
+export { CreateProductDto } from './create.dto';
+export { UpdateProductDto } from './update.dto';

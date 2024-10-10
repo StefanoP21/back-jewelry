@@ -2,8 +2,7 @@ import { CustomError, type ValidationType, ZERO } from '../../../../core';
 import { Decimal } from '../../../../data/postgresql';
 import { type CoreDto } from '../../../shared';
 
-interface ProductDtoProps {
-	id: number;
+interface CreateProductDtoProps {
 	name: string;
 	description: string;
 	categoryId: number;
@@ -12,9 +11,8 @@ interface ProductDtoProps {
 	price: Decimal;
 }
 
-export class ProductDto implements CoreDto<ProductDto> {
+export class CreateProductDto implements CoreDto<CreateProductDto> {
 	private constructor(
-		public readonly id: number,
 		public readonly name: string,
 		public readonly description: string,
 		public readonly categoryId: number,
@@ -25,17 +23,11 @@ export class ProductDto implements CoreDto<ProductDto> {
 		this.validate(this);
 	}
 
-	public validate(dto: ProductDto): void {
+	public validate(dto: CreateProductDto): void {
 		const errors: ValidationType[] = [];
-		const { id, name, description, categoryId, image, material, price } = dto;
+		const { name, description, categoryId, image, material, price } = dto;
 
-		if (!id || id <= ZERO)
-			errors.push({
-				constraint: 'El id es obligatorio',
-				fields: ['id']
-			});
-
-		if (!name || name.length === 0)
+		if (!name || name.length === ZERO)
 			errors.push({
 				constraint: 'El nombre es obligatorio',
 				fields: ['name']
@@ -65,7 +57,7 @@ export class ProductDto implements CoreDto<ProductDto> {
 				fields: ['material']
 			});
 
-		if (!price || price.toNumber() < ZERO)
+		if (!price || parseFloat(price.toString()) < ZERO)
 			errors.push({
 				constraint: 'El precio es obligatorio',
 				fields: ['price']
@@ -74,9 +66,9 @@ export class ProductDto implements CoreDto<ProductDto> {
 		if (errors.length > ZERO) throw CustomError.badRequest('Error validando el producto', errors);
 	}
 
-	static create(object: ProductDtoProps): ProductDto {
-		const { id, name, description, categoryId, image, material, price } = object;
+	static create(object: CreateProductDtoProps): CreateProductDto {
+		const { name, description, categoryId, image, material, price } = object;
 
-		return new ProductDto(id, name, description, categoryId, image, material, price);
+		return new CreateProductDto(name, description, categoryId, image, material, price);
 	}
 }

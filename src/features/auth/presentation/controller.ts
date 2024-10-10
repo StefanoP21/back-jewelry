@@ -28,6 +28,7 @@ interface RequestBodyLogin {
 interface RequestBodyRegister {
 	name: string;
 	lastname: string;
+	email: string;
 	dni: string;
 	password: string;
 	role: Role;
@@ -41,10 +42,11 @@ export class AuthController {
 		res: Response<SuccessResponse<AuthEntity>>,
 		next: NextFunction
 	) => {
-		const { name, lastname, dni, password, role } = req.body;
+		const { name, lastname, email, dni, password, role } = req.body;
 		const registerUserDto = RegisterUserDto.create({
 			name,
 			lastname,
+			email,
 			dni,
 			password,
 			role

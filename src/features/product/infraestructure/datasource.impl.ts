@@ -1,6 +1,6 @@
 import { CustomError } from '../../../core';
 import { prisma } from '../../../data/postgresql';
-import { ProductEntity, type ProductDatasource, type ProductDto } from '../domain';
+import { ProductEntity, type ProductDatasource, type CreateProductDto, type UpdateProductDto } from '../domain';
 
 export class ProductDatasourceImpl implements ProductDatasource {
 	constructor() {}
@@ -19,13 +19,13 @@ export class ProductDatasourceImpl implements ProductDatasource {
 		return product;
 	}
 
-	async createProduct(dto: Omit<ProductDto, 'id'>): Promise<ProductEntity> {
+	async createProduct(dto: CreateProductDto): Promise<ProductEntity> {
 		const product = await prisma.product.create({ data: dto });
 
 		return ProductEntity.fromObject(product);
 	}
 
-	async updateProduct(dto: ProductDto): Promise<ProductEntity> {
+	async updateProduct(dto: UpdateProductDto): Promise<ProductEntity> {
 		const productExist = await prisma.product.findFirst({ where: { id: dto.id } });
 
 		if (!productExist) throw CustomError.notFound('Producto no encontrado');

@@ -1,11 +1,11 @@
 import { type ProductEntity } from '../entities';
 import { type ProductRepository } from '../repository/repository';
 
-export interface GetProductUseCase {
+export interface GetProductsUseCase {
 	execute(): Promise<ProductEntity[]>;
 }
 
-export class GetProduct implements GetProductUseCase {
+export class GetProducts implements GetProductsUseCase {
 	constructor(private readonly repository: ProductRepository) {}
 
 	execute(): Promise<ProductEntity[]> {
