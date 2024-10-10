@@ -10,7 +10,7 @@ import {
 	UpdatePasswordUserDto,
 	RenewUser
 } from '../domain';
-import { HttpCode, SuccessResponse } from '../../../core';
+import { HttpCode, type SuccessResponse } from '../../../core';
 
 type Role = 'ADMIN' | 'USER';
 

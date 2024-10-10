@@ -26,64 +26,80 @@ export class AuthDatasourceImpl implements AuthDatasource {
 	}
 
 	async register(dto: RegisterUserDto): Promise<AuthEntity> {
-		const existUser = await prisma.user.findFirst({ where: { dni: dto.dni } });
-		if (existUser)
-			throw CustomError.badRequest('Usuario ya registrado', [{ constraint: 'El dni es único', fields: ['dni'] }]);
+		try {
+			const existUser = await prisma.user.findUnique({ where: { dni: dto.dni } });
+			if (existUser)
+				throw CustomError.badRequest('Usuario ya registrado', [{ constraint: 'El dni es único', fields: ['dni'] }]);
 
-		const user = await prisma.user.create({ data: dto });
+			const user = await prisma.user.create({ data: dto });
 
-		//* encrypt password
-		user.password = this.hash(dto.password);
-		await prisma.user.update({ where: { id: user.id }, data: { password: user.password } });
+			//* encrypt password
+			user.password = this.hash(dto.password);
+			await prisma.user.update({ where: { id: user.id }, data: { password: user.password } });
 
-		const { password, ...rest } = UserEntity.fromObject(user);
+			const { password, ...rest } = UserEntity.fromObject(user);
 
-		//* jwt
-		const token = await this.handleToken(user.dni);
+			//* jwt
+			const token = await this.handleToken(user.dni);
 
-		return new AuthEntity(rest, token);
+			return new AuthEntity(rest, token);
+		} catch (error) {
+			throw CustomError.internalServer(`Error al registrar el usuario: ${error}`);
+		}
 	}
 
 	async login(dto: LoginUserDto): Promise<AuthEntity> {
-		const user = await prisma.user.findFirst({ where: { dni: dto.dni } });
-		if (!user) throw CustomError.badRequest('Usuario no encontrado');
+		try {
+			const user = await prisma.user.findUnique({ where: { dni: dto.dni } });
+			if (!user) throw CustomError.badRequest('Usuario no encontrado');
 
-		//* validate password
-		const passwordIsValid = this.compare(dto.password, user.password);
-		if (!passwordIsValid) throw CustomError.badRequest('Credenciales incorrectas');
+			//* validate password
+			const passwordIsValid = this.compare(dto.password, user.password);
+			if (!passwordIsValid) throw CustomError.badRequest('Credenciales incorrectas');
 
-		const { password, ...rest } = UserEntity.fromObject(user);
+			const { password, ...rest } = UserEntity.fromObject(user);
 
-		//* jwt
-		const token = await this.handleToken(user.dni);
+			//* jwt
+			const token = await this.handleToken(user.dni);
 
-		return new AuthEntity(rest, token);
+			return new AuthEntity(rest, token);
+		} catch (error) {
+			throw CustomError.internalServer(`Error al iniciar sesión: ${error}`);
+		}
 	}
 
 	async updatePassword(dto: UpdatePasswordUserDto): Promise<unknown> {
-		const user = await prisma.user.findFirst({ where: { dni: dto.dni } });
-		if (!user) throw CustomError.badRequest('Usuario no encontrado');
+		try {
+			const user = await prisma.user.findUnique({ where: { dni: dto.dni } });
+			if (!user) throw CustomError.badRequest('Usuario no encontrado');
 
-		const passwordIsValid = this.compare(dto.password, user.password);
-		if (!passwordIsValid) throw CustomError.badRequest('La contraseña es incorrecta');
+			const passwordIsValid = this.compare(dto.password, user.password);
+			if (!passwordIsValid) throw CustomError.badRequest('La contraseña es incorrecta');
 
-		// Change password
-		user.password = this.hash(dto.newPassword);
+			// Change password
+			user.password = this.hash(dto.newPassword);
 
-		await prisma.user.update({ where: { id: user.id }, data: { password: user.password } });
+			await prisma.user.update({ where: { id: user.id }, data: { password: user.password } });
 
-		return { message: 'Contraseña actualizada' };
+			return { message: 'Contraseña actualizada' };
+		} catch (error) {
+			throw CustomError.internalServer(`Error al actualizar la contraseña: ${error}`);
+		}
 	}
 
 	async renew(dni: string): Promise<AuthEntity> {
-		const user = await prisma.user.findFirst({ where: { dni } });
-		if (!user) throw CustomError.badRequest('Usuario no encontrado');
+		try {
+			const user = await prisma.user.findUnique({ where: { dni } });
+			if (!user) throw CustomError.badRequest('Usuario no encontrado');
 
-		const { password, ...rest } = UserEntity.fromObject(user);
+			const { password, ...rest } = UserEntity.fromObject(user);
 
-		//* jwt
-		const token = await this.handleToken(user.dni);
+			//* jwt
+			const token = await this.handleToken(user.dni);
 
-		return new AuthEntity(rest, token);
+			return new AuthEntity(rest, token);
+		} catch (error) {
+			throw CustomError.internalServer(`Error al renovar el token: ${error}`);
+		}
 	}
 }

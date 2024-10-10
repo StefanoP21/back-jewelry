@@ -12,12 +12,12 @@ export class AuthRoutes {
 		const repository = new AuthRepositoryImpl(datasource);
 		const controller = new AuthController(repository);
 
-		const middleware = new AuthMiddleware(repository);
+		const authMiddleware = new AuthMiddleware(repository);
 
 		router.post('/login', controller.loginUser);
-		router.post('/register', [middleware.validateJWT], controller.registerUser);
-		router.put('/update', controller.updatePassword);
-		router.get('/renew', [middleware.validateJWT], controller.renewUser);
+		router.post('/register', controller.registerUser);
+		router.put('/update', [authMiddleware.validateJWT], controller.updatePassword);
+		router.get('/renew', [authMiddleware.validateJWT], controller.renewUser);
 
 		return router;
 	}
