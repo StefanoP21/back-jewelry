@@ -77,7 +77,7 @@ model Product {
   image       String
   material    String
   price       Decimal
-  stock       Int?
+  stock       Int
   createdAt   DateTime  @default(now())
   updatedAt   DateTime? @updatedAt
 

@@ -10,7 +10,8 @@ async function main(): Promise<void> {
 	//* Server
 	const server = new Server({
 		port: envs.PORT,
-		routes: AppRoutes.routes
+		routes: AppRoutes.routes,
+		apiPrefix: envs.API_PREFIX
 	});
 
 	server.start();

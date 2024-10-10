@@ -5,11 +5,12 @@ import cors from 'cors';
 import rateLimit from 'express-rate-limit';
 
 import { HttpCode, ONE_HUNDRED, ONE_THOUSAND, SIXTY } from './core';
-// import { ErrorMiddleware } from './features/shared';
+import { ErrorMiddleware } from './features/shared';
 
 interface ServerOptions {
 	port: number;
 	routes: Router;
+	apiPrefix: string;
 }
 
 export class Server {
@@ -17,11 +18,13 @@ export class Server {
 	private serverListener?: ServerHttp;
 	private readonly port: number;
 	private readonly routes: Router;
+	private readonly apiPrefix: string;
 
 	constructor(options: ServerOptions) {
-		const { port, routes } = options;
+		const { port, routes, apiPrefix } = options;
 		this.port = port;
 		this.routes = routes;
+		this.apiPrefix = apiPrefix;
 	}
 
 	async start(): Promise<void> {
@@ -41,7 +44,7 @@ export class Server {
 		);
 
 		//* Routes
-		this.app.use(this.routes);
+		this.app.use(this.apiPrefix, this.routes);
 
 		//* Test route
 		this.app.get('/', (_req: Request, res: Response) => {
@@ -51,7 +54,7 @@ export class Server {
 		});
 
 		//* Error Middleware
-		// this.routes.use(ErrorMiddleware.handleError);
+		this.routes.use(ErrorMiddleware.handleError);
 
 		//* Listener
 		this.serverListener = this.app.listen(this.port, () => {
