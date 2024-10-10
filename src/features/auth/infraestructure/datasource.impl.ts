@@ -14,9 +14,7 @@ export class AuthDatasourceImpl implements AuthDatasource {
 	private async handleToken(dni: string): Promise<string> {
 		const jwtAdapter = new JwtAdapter(envs.JWT_SEED);
 		const token = await jwtAdapter.generateToken<string>({ dni });
-
 		if (!token) throw CustomError.internalServer('Error al generar el token');
-
 		return token;
 	}
 
@@ -29,7 +27,6 @@ export class AuthDatasourceImpl implements AuthDatasource {
 
 		//* encrypt password
 		user.password = this.hash(dto.password);
-
 		await prisma.user.update({ where: { id: user.id }, data: { password: user.password } });
 
 		const { password, ...rest } = UserEntity.fromObject(user);
