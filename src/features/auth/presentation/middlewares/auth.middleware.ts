@@ -6,25 +6,22 @@ export class AuthMiddleware {
 	constructor(private readonly repository: AuthRepository) {}
 
 	public validateJWT = async (req: Request, _res: Response, next: NextFunction): Promise<void> => {
-		const authorization = req.header('Authorization');
-		if (!authorization) throw CustomError.unauthorized('No hay un token en la petición');
+		try {
+			const authorization = req.header('Authorization');
+			if (!authorization) throw CustomError.unauthorized('No hay un token en la petición');
+			if (!authorization.startsWith('Bearer '))
+				throw CustomError.unauthorized('Header de autorización no válido (se requiere Bearer token)');
 
-		if (!authorization.startsWith('Bearer '))
-			throw CustomError.unauthorized('Header de autorización no válido (se requiere Bearer token)');
+			const token = authorization.split(' ').at(ONE) ?? '';
+			const jwtAdapter = new JwtAdapter(envs.JWT_SEED);
+			const payload = await jwtAdapter.validateToken<{ dni: string }>(token);
+			if (!payload) throw CustomError.unauthorized('Token inválido');
 
-		const token = authorization.split(' ').at(ONE) ?? '';
-
-		const jwtAdapter = new JwtAdapter(envs.JWT_SEED);
-		const payload = await jwtAdapter.validateToken<{ dni: string }>(token);
-
-		if (!payload) throw CustomError.unauthorized('Token inválido');
-
-		new RenewUser(this.repository)
-			.execute(payload.dni)
-			.then((result) => {
-				req.body.data = result;
-				next();
-			})
-			.catch(next);
+			const result = await new RenewUser(this.repository).execute(payload.dni);
+			req.body.data = result;
+			next();
+		} catch (error) {
+			next(error);
+		}
 	};
 }
