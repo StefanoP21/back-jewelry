@@ -1,4 +1,4 @@
-import { CustomError, EIGHT, SIX, type ValidationType, ZERO } from '../../../../core';
+import { CustomError, EIGHT, SIX, type ValidationType, ZERO, REGEX_EMAIL } from '../../../../core';
 import { type CoreDto } from '../../../shared';
 
 type Role = 'ADMIN' | 'USER';
@@ -6,6 +6,7 @@ type Role = 'ADMIN' | 'USER';
 interface RegisterUserDtoProps {
 	name: string;
 	lastname: string;
+	email: string;
 	dni: string;
 	password: string;
 	role: Role;
@@ -15,6 +16,7 @@ export class RegisterUserDto implements CoreDto<RegisterUserDto> {
 	private constructor(
 		public readonly name: string,
 		public readonly lastname: string,
+		public readonly email: string,
 		public readonly dni: string,
 		public readonly password: string,
 		public readonly role: Role
@@ -24,7 +26,7 @@ export class RegisterUserDto implements CoreDto<RegisterUserDto> {
 
 	public validate(dto: RegisterUserDto): void {
 		const errors: ValidationType[] = [];
-		const { name, lastname, dni, password, role } = dto;
+		const { name, lastname, email, dni, password, role } = dto;
 
 		if (!name || name.length === ZERO)
 			errors.push({
@@ -36,6 +38,12 @@ export class RegisterUserDto implements CoreDto<RegisterUserDto> {
 			errors.push({
 				constraint: 'El nombre es obligatorio',
 				fields: ['lastname']
+			});
+
+		if (!email || email.length === ZERO || !REGEX_EMAIL.test(email))
+			errors.push({
+				constraint: 'El email es obligatorio',
+				fields: ['email']
 			});
 
 		if (!dni || dni.length !== EIGHT)
@@ -61,8 +69,8 @@ export class RegisterUserDto implements CoreDto<RegisterUserDto> {
 	}
 
 	static create(object: RegisterUserDtoProps): RegisterUserDto {
-		const { name, lastname, dni, password, role } = object;
+		const { name, lastname, email, dni, password, role } = object;
 
-		return new RegisterUserDto(name, lastname, dni, password, role);
+		return new RegisterUserDto(name, lastname, email, dni, password, role);
 	}
 }

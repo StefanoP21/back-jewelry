@@ -1,4 +1,5 @@
 import {
+	type UpdatePasswordUserDto,
 	type AuthDatasource,
 	type AuthEntity,
 	type AuthRepository,
@@ -19,5 +20,9 @@ export class AuthRepositoryImpl implements AuthRepository {
 
 	renew(dni: string): Promise<AuthEntity> {
 		return this.datasource.renew(dni);
+	}
+
+	updatePassword(dto: UpdatePasswordUserDto): Promise<unknown> {
+		return this.datasource.updatePassword(dto);
 	}
 }

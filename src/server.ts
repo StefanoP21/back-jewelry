@@ -5,7 +5,7 @@ import cors from 'cors';
 import rateLimit from 'express-rate-limit';
 
 import { HttpCode, ONE_HUNDRED, ONE_THOUSAND, SIXTY } from './core';
-import { ErrorMiddleware } from './features/shared';
+// import { ErrorMiddleware } from './features/shared';
 
 interface ServerOptions {
 	port: number;
@@ -51,7 +51,7 @@ export class Server {
 		});
 
 		//* Error Middleware
-		this.routes.use(ErrorMiddleware.handleError);
+		// this.routes.use(ErrorMiddleware.handleError);
 
 		//* Listener
 		this.serverListener = this.app.listen(this.port, () => {
