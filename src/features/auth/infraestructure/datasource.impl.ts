@@ -44,6 +44,7 @@ export class AuthDatasourceImpl implements AuthDatasource {
 
 			return new AuthEntity(rest, token);
 		} catch (error) {
+			if (error instanceof CustomError) throw error;
 			throw CustomError.internalServer(`Error al registrar el usuario: ${error}`);
 		}
 	}
@@ -64,6 +65,7 @@ export class AuthDatasourceImpl implements AuthDatasource {
 
 			return new AuthEntity(rest, token);
 		} catch (error) {
+			if (error instanceof CustomError) throw error;
 			throw CustomError.internalServer(`Error al iniciar sesión: ${error}`);
 		}
 	}
@@ -83,6 +85,7 @@ export class AuthDatasourceImpl implements AuthDatasource {
 
 			return { message: 'Contraseña actualizada' };
 		} catch (error) {
+			if (error instanceof CustomError) throw error;
 			throw CustomError.internalServer(`Error al actualizar la contraseña: ${error}`);
 		}
 	}
@@ -99,6 +102,7 @@ export class AuthDatasourceImpl implements AuthDatasource {
 
 			return new AuthEntity(rest, token);
 		} catch (error) {
+			if (error instanceof CustomError) throw error;
 			throw CustomError.internalServer(`Error al renovar el token: ${error}`);
 		}
 	}
