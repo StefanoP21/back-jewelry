@@ -10,14 +10,20 @@ export class ProductDatasourceImpl implements ProductDatasource {
 			const products = await prisma.product.findMany();
 			return products.map((product) => ProductEntity.fromObject(product));
 		} catch (error) {
+			if (error instanceof CustomError) throw error;
 			throw CustomError.internalServer(`Error al obtener los productos: ${error}`);
 		}
 	}
 
 	async getById(id: number): Promise<ProductEntity> {
-		const product = await prisma.product.findUnique({ where: { id } });
-		if (!product) throw CustomError.notFound(`Producto con id ${id} no encontrado`);
-		return ProductEntity.fromObject(product);
+		try {
+			const product = await prisma.product.findUnique({ where: { id } });
+			if (!product) throw CustomError.notFound(`Producto con id ${id} no encontrado`);
+			return ProductEntity.fromObject(product);
+		} catch (error) {
+			if (error instanceof CustomError) throw error;
+			throw CustomError.internalServer(`Error al obtener el producto con id ${id}: ${error}`);
+		}
 	}
 
 	async create(dto: CreateProductDto): Promise<ProductEntity> {
@@ -25,6 +31,7 @@ export class ProductDatasourceImpl implements ProductDatasource {
 			const product = await prisma.product.create({ data: dto });
 			return ProductEntity.fromObject(product);
 		} catch (error) {
+			if (error instanceof CustomError) throw error;
 			throw CustomError.internalServer(`Error al crear el producto: ${error}`);
 		}
 	}
@@ -35,13 +42,19 @@ export class ProductDatasourceImpl implements ProductDatasource {
 			const product = await prisma.product.update({ where: { id }, data: dto });
 			return ProductEntity.fromObject(product);
 		} catch (error) {
+			if (error instanceof CustomError) throw error;
 			throw CustomError.internalServer(`Error al actualizar el producto con id ${dto.id}: ${error}`);
 		}
 	}
 
 	async delete(id: number): Promise<ProductEntity> {
-		const { id: productId } = await this.getById(id);
-		const deletedProduct = await prisma.product.delete({ where: { id: productId } });
-		return ProductEntity.fromObject(deletedProduct);
+		try {
+			const { id: productId } = await this.getById(id);
+			const deletedProduct = await prisma.product.delete({ where: { id: productId } });
+			return ProductEntity.fromObject(deletedProduct);
+		} catch (error) {
+			if (error instanceof CustomError) throw error;
+			throw CustomError.internalServer(`Error al eliminar el producto con id ${id}: ${error}`);
+		}
 	}
 }

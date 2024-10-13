@@ -13,9 +13,7 @@ import {
 	GetAllUsers,
 	DeleteUser
 } from '../domain';
-import { HttpCode, type SuccessResponse } from '../../../core';
-
-type Role = 'ADMIN' | 'USER';
+import { HttpCode, Role, type SuccessResponse } from '../../../core';
 
 interface RequestBodyUpdatePassword {
 	dni: string;
