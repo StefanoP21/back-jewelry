@@ -12,6 +12,8 @@ export const ONE_THOUSAND = 1000 as const;
 
 export const REGEX_EMAIL = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
 
+export type Role = 'ADMIN' | 'USER';
+
 export enum HttpCode {
 	OK = 200,
 	CREATED = 201,
@@ -21,4 +23,27 @@ export enum HttpCode {
 	FORBIDDEN = 403,
 	NOT_FOUND = 404,
 	INTERNAL_SERVER_ERROR = 500
+}
+
+export enum ErrorType {
+	BAD_REQUEST = 'BAD_REQUEST',
+	UNAUTHORIZED = 'UNAUTHORIZED',
+	FORBIDDEN = 'FORBIDDEN',
+	NOT_FOUND = 'NOT_FOUND',
+	INTERNAL_SERVER_ERROR = 'INTERNAL_SERVER_ERROR'
+}
+
+export enum ErrorMessages {
+	//* AUTH
+	USER_NOT_FOUND = 'Usuario no encontrado',
+	USER_ALREADY_REGISTERED = 'Usuario ya registrado',
+	INVALID_CREDENTIALS = 'Credenciales incorrectas',
+
+	//* TOKEN
+	TOKEN_NOT_FOUND = 'No hay un token en la petición',
+	WRONG_AUTHORIZATION_HEADER = 'Header de autorización no válido (se requiere Bearer token)',
+	INVALID_TOKEN = 'Token inválido',
+
+	//* INTERNAL SERVER ERROR
+	INTERNAL_SERVER_ERROR = 'Error interno del servidor'
 }

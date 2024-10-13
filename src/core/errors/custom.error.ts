@@ -1,4 +1,4 @@
-import { HttpCode } from '../constants';
+import { ErrorType, HttpCode } from '../constants';
 import { ValidationType } from '../types';
 
 interface CustomErrorArgs {
@@ -32,7 +32,7 @@ export class CustomError extends Error {
 
 	static badRequest(message: string, validationErrors?: ValidationType[]): CustomError {
 		return new CustomError({
-			name: 'BadRequestError',
+			name: ErrorType.BAD_REQUEST,
 			message,
 			statusCode: HttpCode.BAD_REQUEST,
 			validationErrors
@@ -41,7 +41,7 @@ export class CustomError extends Error {
 
 	static unauthorized(message: string): CustomError {
 		return new CustomError({
-			name: 'UnauthorizedError',
+			name: ErrorType.UNAUTHORIZED,
 			message,
 			statusCode: HttpCode.UNAUTHORIZED
 		});
@@ -49,7 +49,7 @@ export class CustomError extends Error {
 
 	static forbidden(message: string): CustomError {
 		return new CustomError({
-			name: 'ForbiddenError',
+			name: ErrorType.FORBIDDEN,
 			message,
 			statusCode: HttpCode.FORBIDDEN
 		});
@@ -57,7 +57,7 @@ export class CustomError extends Error {
 
 	static notFound(message: string): CustomError {
 		return new CustomError({
-			name: 'NotFoundError',
+			name: ErrorType.NOT_FOUND,
 			message,
 			statusCode: HttpCode.NOT_FOUND
 		});
@@ -65,7 +65,7 @@ export class CustomError extends Error {
 
 	static internalServer(message: string): CustomError {
 		return new CustomError({
-			name: 'InternalServerError',
+			name: ErrorType.INTERNAL_SERVER_ERROR,
 			message,
 			statusCode: HttpCode.INTERNAL_SERVER_ERROR
 		});
