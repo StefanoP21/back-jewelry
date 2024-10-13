@@ -2,7 +2,7 @@ export { AuthDatasource } from './datasources/datasource';
 
 export { LoginUserDto, RegisterUserDto, UpdatePasswordUserDto } from './dtos';
 
-export { AuthEntity, UserEntity } from './entities';
+export { AuthEntity, UserEntity, UserResponseEntity } from './entities';
 
 export { AuthRepository } from './repositories/repository';
 

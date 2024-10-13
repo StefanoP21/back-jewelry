@@ -5,7 +5,7 @@ import {
 	type AuthRepository,
 	type LoginUserDto,
 	type RegisterUserDto,
-	type UserEntity
+	type UserResponseEntity
 } from '../domain';
 
 export class AuthRepositoryImpl implements AuthRepository {
@@ -27,11 +27,11 @@ export class AuthRepositoryImpl implements AuthRepository {
 		return this.datasource.updatePassword(dto);
 	}
 
-	getAll(): Promise<UserEntity[]> {
+	getAll(): Promise<UserResponseEntity[]> {
 		return this.datasource.getAll();
 	}
 
-	delete(id: number): Promise<UserEntity> {
+	delete(id: number): Promise<UserResponseEntity> {
 		return this.datasource.delete(id);
 	}
 }

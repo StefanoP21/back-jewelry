@@ -2,7 +2,7 @@ import { type Request, type Response, type NextFunction } from 'express';
 import {
 	type AuthEntity,
 	type AuthRepository,
-	type UserEntity,
+	type UserResponseEntity,
 	LoginUser,
 	LoginUserDto,
 	RegisterUser,
@@ -96,14 +96,14 @@ export class AuthController {
 			.catch(next);
 	};
 
-	public getAllUsers = (_req: Request, res: Response<SuccessResponse<UserEntity[]>>, next: NextFunction) => {
+	public getAllUsers = (_req: Request, res: Response<SuccessResponse<UserResponseEntity[]>>, next: NextFunction) => {
 		new GetAllUsers(this.repository)
 			.execute()
 			.then((result) => res.status(HttpCode.OK).json({ data: result }))
 			.catch(next);
 	};
 
-	public deleteUser = (req: Request, res: Response<unknown>, next: NextFunction) => {
+	public deleteUser = (req: Request, res: Response<UserResponseEntity>, next: NextFunction) => {
 		const { id } = req.params;
 
 		new DeleteUser(this.repository)
