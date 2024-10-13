@@ -1,7 +1,5 @@
-import { CustomError, EIGHT, SIX, type ValidationType, ZERO, REGEX_EMAIL } from '../../../../core';
+import { CustomError, EIGHT, SIX, type ValidationType, ZERO, REGEX_EMAIL, Role } from '../../../../core';
 import { type CoreDto } from '../../../shared';
-
-type Role = 'ADMIN' | 'USER';
 
 interface RegisterUserDtoProps {
 	name: string;
@@ -42,7 +40,7 @@ export class RegisterUserDto implements CoreDto<RegisterUserDto> {
 
 		if (!email || email.length === ZERO || !REGEX_EMAIL.test(email))
 			errors.push({
-				constraint: 'El email es obligatorio',
+				constraint: 'El correo no es válido',
 				fields: ['email']
 			});
 

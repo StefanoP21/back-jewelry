@@ -1,11 +1,10 @@
-import { CustomError, ZERO } from '../../../../core';
-
-type Role = 'ADMIN' | 'USER';
+import { CustomError, Role, ZERO } from '../../../../core';
 
 interface UserEntityProps {
 	id: number;
 	name: string;
 	lastname: string;
+	email: string;
 	dni: string;
 	password: string;
 	role: Role;
@@ -15,13 +14,14 @@ export class UserEntity {
 		public id: number,
 		public name: string,
 		public lastname: string,
+		public email: string,
 		public dni: string,
 		public password: string,
 		public role: Role
 	) {}
 
 	static fromObject(object: UserEntityProps): UserEntity {
-		const { id, name, lastname, dni, password, role } = object;
+		const { id, name, lastname, email, dni, password, role } = object;
 
 		if (!id)
 			throw CustomError.badRequest('This entity requires an id', [{ constraint: 'id is required', fields: ['id'] }]);
@@ -36,8 +36,13 @@ export class UserEntity {
 				{ constraint: 'lastname is required', fields: ['lastname'] }
 			]);
 
+		if (!email || email.length === ZERO)
+			throw CustomError.badRequest('This entity requires an email', [
+				{ constraint: 'email is required', fields: ['email'] }
+			]);
+
 		if (!dni || dni.length === ZERO)
-			throw CustomError.badRequest('This entity requires an dni', [{ constraint: 'dni is required', fields: ['dni'] }]);
+			throw CustomError.badRequest('This entity requires a dni', [{ constraint: 'dni is required', fields: ['dni'] }]);
 
 		if (!password || password.length === ZERO)
 			throw CustomError.badRequest('This entity requires a password', [
@@ -49,6 +54,6 @@ export class UserEntity {
 				{ constraint: 'role is required', fields: ['role'] }
 			]);
 
-		return new UserEntity(id, name, lastname, dni, password, role);
+		return new UserEntity(id, name, lastname, email, dni, password, role);
 	}
 }
