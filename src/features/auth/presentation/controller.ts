@@ -2,13 +2,16 @@ import { type Request, type Response, type NextFunction } from 'express';
 import {
 	type AuthEntity,
 	type AuthRepository,
+	type UserEntity,
 	LoginUser,
 	LoginUserDto,
 	RegisterUser,
 	RegisterUserDto,
 	UpdatePasswordUser,
 	UpdatePasswordUserDto,
-	RenewUser
+	RenewUser,
+	GetAllUsers,
+	DeleteUser
 } from '../domain';
 import { HttpCode, type SuccessResponse } from '../../../core';
 
@@ -92,6 +95,22 @@ export class AuthController {
 		new RenewUser(this.repository)
 			.execute(dni)
 			.then((result) => res.status(HttpCode.OK).json({ data: result }))
+			.catch(next);
+	};
+
+	public getAllUsers = (_req: Request, res: Response<SuccessResponse<UserEntity[]>>, next: NextFunction) => {
+		new GetAllUsers(this.repository)
+			.execute()
+			.then((result) => res.status(HttpCode.OK).json({ data: result }))
+			.catch(next);
+	};
+
+	public deleteUser = (req: Request, res: Response<unknown>, next: NextFunction) => {
+		const { id } = req.params;
+
+		new DeleteUser(this.repository)
+			.execute(Number(id))
+			.then((result) => res.status(HttpCode.OK).json(result))
 			.catch(next);
 	};
 }
