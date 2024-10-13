@@ -14,6 +14,8 @@ export class AuthRoutes {
 
 		const authMiddleware = new AuthMiddleware(repository);
 
+		router.get('/', controller.getAllUsers);
+		router.delete('/:id', [authMiddleware.validateJWT], controller.deleteUser);
 		router.post('/login', controller.loginUser);
 		router.post('/register', controller.registerUser);
 		router.put('/update', [authMiddleware.validateJWT], controller.updatePassword);

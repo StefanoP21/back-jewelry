@@ -3,6 +3,7 @@ import { prisma } from '../../../data/postgresql';
 import {
 	AuthEntity,
 	UserEntity,
+	UserResponseEntity,
 	type AuthDatasource,
 	type LoginUserDto,
 	type RegisterUserDto,
@@ -106,6 +107,29 @@ export class AuthDatasourceImpl implements AuthDatasource {
 		} catch (error) {
 			if (error instanceof CustomError) throw error;
 			throw CustomError.internalServer(`Error al renovar el token: ${error}`);
+		}
+	}
+
+	async getAll(): Promise<UserResponseEntity[]> {
+		try {
+			const users = await prisma.user.findMany();
+
+			return users.map((user) => UserResponseEntity.fromObject(user));
+		} catch (error) {
+			throw CustomError.internalServer(`Error al obtener los usuarios: ${error}`);
+		}
+	}
+
+	async delete(id: number): Promise<UserResponseEntity> {
+		try {
+			const user = await prisma.user.findUnique({ where: { id } });
+			if (!user) throw CustomError.badRequest('Usuario no encontrado');
+
+			await prisma.user.delete({ where: { id: user.id } });
+
+			return UserResponseEntity.fromObject(user);
+		} catch (error) {
+			throw CustomError.internalServer(`Error al eliminar el usuario: ${error}`);
 		}
 	}
 }
