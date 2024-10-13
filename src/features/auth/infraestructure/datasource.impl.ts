@@ -1,4 +1,4 @@
-import { CustomError, envs, JwtAdapter } from '../../../core';
+import { CustomError, envs, ErrorMessages, JwtAdapter } from '../../../core';
 import { prisma } from '../../../data/postgresql';
 import {
 	AuthEntity,
@@ -29,7 +29,9 @@ export class AuthDatasourceImpl implements AuthDatasource {
 		try {
 			const existUser = await prisma.user.findUnique({ where: { dni: dto.dni } });
 			if (existUser)
-				throw CustomError.badRequest('Usuario ya registrado', [{ constraint: 'El dni es único', fields: ['dni'] }]);
+				throw CustomError.badRequest(ErrorMessages.USER_ALREADY_REGISTERED, [
+					{ constraint: 'El dni es único', fields: ['dni'] }
+				]);
 
 			const user = await prisma.user.create({ data: dto });
 
@@ -52,11 +54,11 @@ export class AuthDatasourceImpl implements AuthDatasource {
 	async login(dto: LoginUserDto): Promise<AuthEntity> {
 		try {
 			const user = await prisma.user.findUnique({ where: { dni: dto.dni } });
-			if (!user) throw CustomError.badRequest('Usuario no encontrado');
+			if (!user) throw CustomError.badRequest(ErrorMessages.USER_NOT_FOUND);
 
 			//* validate password
 			const passwordIsValid = this.compare(dto.password, user.password);
-			if (!passwordIsValid) throw CustomError.badRequest('Credenciales incorrectas');
+			if (!passwordIsValid) throw CustomError.badRequest(ErrorMessages.INVALID_CREDENTIALS);
 
 			const { password, ...rest } = UserEntity.fromObject(user);
 
@@ -73,7 +75,7 @@ export class AuthDatasourceImpl implements AuthDatasource {
 	async updatePassword(dto: UpdatePasswordUserDto): Promise<unknown> {
 		try {
 			const user = await prisma.user.findUnique({ where: { dni: dto.dni } });
-			if (!user) throw CustomError.badRequest('Usuario no encontrado');
+			if (!user) throw CustomError.badRequest(ErrorMessages.USER_NOT_FOUND);
 
 			const passwordIsValid = this.compare(dto.password, user.password);
 			if (!passwordIsValid) throw CustomError.badRequest('La contraseña es incorrecta');
@@ -93,7 +95,7 @@ export class AuthDatasourceImpl implements AuthDatasource {
 	async renew(dni: string): Promise<AuthEntity> {
 		try {
 			const user = await prisma.user.findUnique({ where: { dni } });
-			if (!user) throw CustomError.badRequest('Usuario no encontrado');
+			if (!user) throw CustomError.badRequest(ErrorMessages.USER_NOT_FOUND);
 
 			const { password, ...rest } = UserEntity.fromObject(user);
 

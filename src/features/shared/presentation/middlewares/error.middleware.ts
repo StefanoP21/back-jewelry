@@ -1,5 +1,5 @@
 import { type NextFunction, type Request, type Response } from 'express';
-import { CustomError, type ErrorResponse, HttpCode } from '../../../../core';
+import { CustomError, ErrorType, type ErrorResponse, HttpCode } from '../../../../core';
 
 export class ErrorMiddleware {
 	public static handleError = (
@@ -13,7 +13,7 @@ export class ErrorMiddleware {
 			res.statusCode = error.statusCode || HttpCode.INTERNAL_SERVER_ERROR;
 			res.json({ name, message, validationErrors, stack });
 		} else {
-			const name = 'InternalServerError';
+			const name = ErrorType.INTERNAL_SERVER_ERROR;
 			const message = 'Ocurrio un error interno en el servidor';
 			res.statusCode = HttpCode.INTERNAL_SERVER_ERROR;
 			res.json({ name, message });
