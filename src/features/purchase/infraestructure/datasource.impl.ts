@@ -40,11 +40,7 @@ export class PurchaseDatasourceImpl implements PurchaseDatasource {
 					supplierId: dto.supplierId,
 					total: dto.total,
 					purchaseDetail: {
-						create: dto.purchaseDetail.map((product) => ({
-							productId: product.productId,
-							quantity: product.quantity,
-							unitPrice: product.unitPrice
-						}))
+						create: dto.purchaseDetail
 					}
 				},
 				include: {
