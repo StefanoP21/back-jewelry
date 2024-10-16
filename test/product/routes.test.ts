@@ -14,8 +14,12 @@ const product = {
 };
 
 const user = {
-	dni: '12345678',
-	password: '123456'
+	name: 'Oscar Antonio',
+	lastname: 'Medina Reyes',
+	dni: '77229991',
+	email: 'omedina.reyes@gmail.com',
+	password: '123456',
+	role: 'ADMIN'
 };
 
 let token: string;
@@ -23,11 +27,13 @@ let token: string;
 beforeAll(async () => {
 	await testServer.start();
 
-	const { body } = await request(testServer.app).post('/api/auth/login').send(user);
+	const { body } = await request(testServer.app).post('/api/auth/register').send(user);
 	token = body.data.token;
 });
 
 afterAll(async () => {
+	await prisma.user.deleteMany();
+
 	testServer.close();
 });
 
@@ -54,8 +60,7 @@ describe('Testing product routes', () => {
 	});
 
 	it('should update a product - api/product/:id', async () => {
-		const id = prisma.product.findMany({ take: 1, orderBy: { id: 'desc' } }).then((res) => res[0].id);
-		console.log(id);
+		const id = await prisma.product.findMany({ take: 1, orderBy: { id: 'desc' } }).then((res) => res[0].id);
 
 		const { body } = await request(testServer.app)
 			.put(`/api/product/${id}`)
@@ -89,7 +94,7 @@ describe('Testing product routes', () => {
 	});
 
 	it('should get product by id - api/product/:id', async () => {
-		const id = prisma.product.findMany({ take: 1, orderBy: { id: 'desc' } }).then((res) => res[0].id);
+		const id = await prisma.product.findMany({ take: 1, orderBy: { id: 'desc' } }).then((res) => res[0].id);
 		console.log(id);
 
 		const { body } = await request(testServer.app)
@@ -112,8 +117,7 @@ describe('Testing product routes', () => {
 	});
 
 	it('should delete a product - api/product/:id', async () => {
-		const id = prisma.product.findMany({ take: 1, orderBy: { id: 'desc' } }).then((res) => res[0].id);
-		console.log(id);
+		const id = await prisma.product.findMany({ take: 1, orderBy: { id: 'desc' } }).then((res) => res[0].id);
 
 		const { body } = await request(testServer.app)
 			.delete(`/api/product/${id}`)
@@ -121,7 +125,7 @@ describe('Testing product routes', () => {
 			.expect(HttpCode.OK);
 
 		expect(body).toEqual({
-			data: expect.any(String)
+			data: expect.any(Object)
 		});
 	});
 });
