@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import { AuthMiddleware, AuthRoutes } from './features/auth';
 import { ProductRoutes } from './features/product';
+import { CategoryRoutes } from './features/category';
 import { AuthDatasourceImpl, AuthRepositoryImpl } from './features/auth/infraestructure';
 import { BcryptAdapter } from './core';
 
@@ -14,6 +15,7 @@ export class AppRoutes {
 
 		router.use('/auth', AuthRoutes.routes);
 		router.use('/product', [authMiddleware.validateJWT], ProductRoutes.routes);
+		router.use('/category', [authMiddleware.validateJWT], CategoryRoutes.routes);
 
 		return router;
 	}
