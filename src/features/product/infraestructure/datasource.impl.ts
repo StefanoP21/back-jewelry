@@ -1,4 +1,4 @@
-import { CustomError } from '../../../core';
+import { CustomError, ErrorMessages } from '../../../core';
 import { prisma } from '../../../data/postgresql';
 import { ProductEntity, type ProductDatasource, type CreateProductDto, type UpdateProductDto } from '../domain';
 
@@ -8,6 +8,7 @@ export class ProductDatasourceImpl implements ProductDatasource {
 	async getAll(): Promise<ProductEntity[]> {
 		try {
 			const products = await prisma.product.findMany();
+
 			return products.map((product) => ProductEntity.fromObject(product));
 		} catch (error) {
 			if (error instanceof CustomError) throw error;
@@ -18,7 +19,9 @@ export class ProductDatasourceImpl implements ProductDatasource {
 	async getById(id: number): Promise<ProductEntity> {
 		try {
 			const product = await prisma.product.findUnique({ where: { id } });
-			if (!product) throw CustomError.notFound(`Producto con id ${id} no encontrado`);
+
+			if (!product) throw CustomError.notFound(ErrorMessages.PRODUCT_NOT_FOUND);
+
 			return ProductEntity.fromObject(product);
 		} catch (error) {
 			if (error instanceof CustomError) throw error;
@@ -29,6 +32,7 @@ export class ProductDatasourceImpl implements ProductDatasource {
 	async create(dto: CreateProductDto): Promise<ProductEntity> {
 		try {
 			const product = await prisma.product.create({ data: dto });
+
 			return ProductEntity.fromObject(product);
 		} catch (error) {
 			if (error instanceof CustomError) throw error;
@@ -39,7 +43,9 @@ export class ProductDatasourceImpl implements ProductDatasource {
 	async update(dto: UpdateProductDto): Promise<ProductEntity> {
 		try {
 			const { id } = await this.getById(dto.id);
+
 			const product = await prisma.product.update({ where: { id }, data: dto });
+
 			return ProductEntity.fromObject(product);
 		} catch (error) {
 			if (error instanceof CustomError) throw error;
