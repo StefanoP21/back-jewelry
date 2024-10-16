@@ -51,5 +51,8 @@ export enum ErrorMessages {
 	INVALID_TOKEN = 'Token inválido',
 
 	//* INTERNAL SERVER ERROR
-	INTERNAL_SERVER_ERROR = 'Error interno del servidor'
+	INTERNAL_SERVER_ERROR = 'Error interno del servidor',
+
+	//* CATEGORY
+	CATEGORY_NOT_FOUND = 'Categoría no encontrada'
 }
