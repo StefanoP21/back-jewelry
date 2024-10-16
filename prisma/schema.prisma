@@ -118,29 +118,29 @@ model Order {
 
 model OrderDetail {
   id        Int     @id @default(autoincrement())
-  OrderId   Int
+  orderId   Int
   productId Int
   quantity  Int
   unitPrice Decimal
 
-  order   Order   @relation(fields: [OrderId], references: [id])
+  order   Order   @relation(fields: [orderId], references: [id])
   product Product @relation(fields: [productId], references: [id])
 }
 
 model PurchaseDetail {
   id         Int     @id @default(autoincrement())
-  PurchaseId Int
+  purchaseId Int
   productId  Int
   quantity   Int
   unitPrice  Decimal
 
-  purchase Purchase @relation(fields: [PurchaseId], references: [id])
+  purchase Purchase @relation(fields: [purchaseId], references: [id], onDelete: Cascade)
   product  Product  @relation(fields: [productId], references: [id])
 }
 
 model Refund {
   id         Int       @id @default(autoincrement())
-  PurchaseId Int
+  purchaseId Int
   productId  Int
   quantity   Int
   date       DateTime  @default(now())
@@ -148,6 +148,6 @@ model Refund {
   createdAt  DateTime  @default(now())
   updatedAt  DateTime? @updatedAt
 
-  purchase Purchase @relation(fields: [PurchaseId], references: [id])
+  purchase Purchase @relation(fields: [purchaseId], references: [id])
   product  Product  @relation(fields: [productId], references: [id])
 }

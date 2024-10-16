@@ -39,6 +39,12 @@ export enum ErrorMessages {
 	USER_ALREADY_REGISTERED = 'Usuario ya registrado',
 	INVALID_CREDENTIALS = 'Credenciales incorrectas',
 
+	// PRODUCT
+	PRODUCT_NOT_FOUND = 'Producto no encontrado',
+
+	// PURCHASE
+	PURCHASE_NOT_FOUND = 'Compra no encontrada',
+
 	//* TOKEN
 	TOKEN_NOT_FOUND = 'No hay un token en la petición',
 	WRONG_AUTHORIZATION_HEADER = 'Header de autorización no válido (se requiere Bearer token)',
