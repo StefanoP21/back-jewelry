@@ -12,13 +12,7 @@ afterAll(async () => {
 });
 
 beforeEach(async () => {
-	await prisma.user.deleteMany({
-		where: {
-			dni: {
-				not: '87654321'
-			}
-		}
-	});
+	await prisma.user.deleteMany();
 });
 
 const user = {
