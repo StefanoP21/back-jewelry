@@ -1,11 +1,16 @@
 import { CustomError, ZERO } from '../../../../core';
 import { Decimal } from '../../../../data/postgresql';
 
+interface CategoryEntityProps {
+	id: number;
+	name: string;
+}
+
 interface ProductEntityProps {
 	id: number;
 	name: string;
 	description: string;
-	categoryId: number;
+	category: CategoryEntityProps;
 	image: string;
 	material: string;
 	price: Decimal;
@@ -17,7 +22,7 @@ export class ProductEntity {
 		public readonly id: number,
 		public readonly name: string,
 		public readonly description: string,
-		public readonly categoryId: number,
+		public readonly category: CategoryEntityProps,
 		public readonly image: string,
 		public readonly material: string,
 		public readonly price: Decimal,
@@ -25,7 +30,7 @@ export class ProductEntity {
 	) {}
 
 	static fromObject(object: ProductEntityProps): ProductEntity {
-		const { id, name, description, categoryId, image, material, price, stock } = object;
+		const { id, name, description, category, image, material, price, stock } = object;
 
 		if (!id)
 			throw CustomError.badRequest('This entity requires an id', [{ constraint: 'id is required', fields: ['id'] }]);
@@ -40,10 +45,22 @@ export class ProductEntity {
 				{ constraint: 'description is required', fields: ['description'] }
 			]);
 
-		if (!categoryId || categoryId <= ZERO)
+		if (!category)
 			throw CustomError.badRequest('This entity requires a categoryId', [
 				{ constraint: 'categoryId is required', fields: ['categoryId'] }
 			]);
+
+		if (!category.id) {
+			throw CustomError.badRequest('This entity requires a category id', [
+				{ constraint: 'category id is required', fields: ['category.id'] }
+			]);
+		}
+
+		if (!category.name || category.name.length === ZERO) {
+			throw CustomError.badRequest('This entity requires a category name', [
+				{ constraint: 'category name is required', fields: ['category.name'] }
+			]);
+		}
 
 		if (!image || image.length === ZERO)
 			throw CustomError.badRequest('This entity requires an image', [
@@ -65,6 +82,6 @@ export class ProductEntity {
 				{ constraint: 'stock is required', fields: ['stock'] }
 			]);
 
-		return new ProductEntity(id, name, description, categoryId, image, material, price, stock);
+		return new ProductEntity(id, name, description, category, image, material, price, stock);
 	}
 }

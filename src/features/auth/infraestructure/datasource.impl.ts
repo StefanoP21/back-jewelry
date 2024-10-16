@@ -114,7 +114,10 @@ export class AuthDatasourceImpl implements AuthDatasource {
 		try {
 			const users = await prisma.user.findMany();
 
-			return users.map((user) => UserResponseEntity.fromObject(user));
+			return users.map((user) => {
+				const { password, ...rest } = UserEntity.fromObject(user);
+				return new UserResponseEntity(rest);
+			});
 		} catch (error) {
 			throw CustomError.internalServer(`Error al obtener los usuarios: ${error}`);
 		}
@@ -127,7 +130,9 @@ export class AuthDatasourceImpl implements AuthDatasource {
 
 			await prisma.user.delete({ where: { id: user.id } });
 
-			return UserResponseEntity.fromObject(user);
+			const { password, ...rest } = UserEntity.fromObject(user);
+
+			return new UserResponseEntity(rest);
 		} catch (error) {
 			throw CustomError.internalServer(`Error al eliminar el usuario: ${error}`);
 		}
