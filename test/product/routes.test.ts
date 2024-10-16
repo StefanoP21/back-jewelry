@@ -34,22 +34,17 @@ beforeAll(async () => {
 	const { body } = await request(testServer.app).post('/api/auth/register').send(user);
 	token = body.data.token;
 
-	/*
 	const { body: bodyCategory } = await request(testServer.app)
 		.post('/api/category')
 		.set('Authorization', `Bearer ${token}`)
 		.send(category);
 
-	console.log(bodyCategory.data.id);
-
 	product.categoryId = bodyCategory.data.id;
-  */
 });
 
 afterAll(async () => {
 	await prisma.user.deleteMany();
-	// await prisma.category.deleteMany();
-
+	await prisma.category.deleteMany();
 	testServer.close();
 });
 
@@ -66,7 +61,7 @@ describe('Testing product routes', () => {
 				id: expect.any(Number),
 				name: expect.any(String),
 				description: expect.any(String),
-				categoryId: expect.any(Number),
+				category: expect.any(Object),
 				image: expect.any(String),
 				material: expect.any(String),
 				price: expect.any(String),
@@ -89,7 +84,7 @@ describe('Testing product routes', () => {
 				id: expect.any(Number),
 				name: expect.any(String),
 				description: expect.any(String),
-				categoryId: expect.any(Number),
+				category: expect.any(Object),
 				image: expect.any(String),
 				material: expect.any(String),
 				price: expect.any(String),
@@ -122,7 +117,7 @@ describe('Testing product routes', () => {
 				id: expect.any(Number),
 				name: expect.any(String),
 				description: expect.any(String),
-				categoryId: expect.any(Number),
+				category: expect.any(Object),
 				image: expect.any(String),
 				material: expect.any(String),
 				price: expect.any(String),
