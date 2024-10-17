@@ -39,10 +39,10 @@ export enum ErrorMessages {
 	USER_ALREADY_REGISTERED = 'Usuario ya registrado',
 	INVALID_CREDENTIALS = 'Credenciales incorrectas',
 
-	// PRODUCT
+	//* PRODUCT
 	PRODUCT_NOT_FOUND = 'Producto no encontrado',
 
-	// PURCHASE
+	//* PURCHASE
 	PURCHASE_NOT_FOUND = 'Compra no encontrada',
 
 	//* TOKEN
