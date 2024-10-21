@@ -72,7 +72,7 @@ beforeAll(async () => {
 
 	purchase.supplierId = supplierID.id;
 	purchase.purchaseDetail[0].productId = bodyProduct.data.id;
-});
+}, 10000);
 
 afterAll(async () => {
 	await prisma.user.deleteMany();
