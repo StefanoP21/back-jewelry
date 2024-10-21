@@ -7,7 +7,7 @@ interface RegisterUserDtoProps {
 	email: string;
 	dni: string;
 	password: string;
-	role: Role;
+	role?: Role;
 }
 
 export class RegisterUserDto implements CoreDto<RegisterUserDto> {
@@ -17,7 +17,7 @@ export class RegisterUserDto implements CoreDto<RegisterUserDto> {
 		public readonly email: string,
 		public readonly dni: string,
 		public readonly password: string,
-		public readonly role: Role
+		public readonly role?: Role
 	) {
 		this.validate(this);
 	}
@@ -57,7 +57,7 @@ export class RegisterUserDto implements CoreDto<RegisterUserDto> {
 			});
 
 		const validRoles = ['ADMIN', 'USER'];
-		if (!role || !validRoles.includes(role))
+		if (role && !validRoles.includes(role))
 			errors.push({
 				constraint: 'El rol no es válido',
 				fields: ['role']
