@@ -17,7 +17,7 @@ export class AppRoutes {
 		router.use('/auth', AuthRoutes.routes);
 		router.use('/category', [authMiddleware.validateJWT], CategoryRoutes.routes);
 		router.use('/product', [authMiddleware.validateJWT], ProductRoutes.routes);
-		router.use('/purchase', PurchaseRoutes.routes);
+		router.use('/purchase', [authMiddleware.validateJWT], PurchaseRoutes.routes);
 
 		return router;
 	}
