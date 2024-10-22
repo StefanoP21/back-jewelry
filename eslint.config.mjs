@@ -53,11 +53,22 @@ export default [
 			'no-duplicate-imports': 'error',
 			'no-unused-vars': 'off',
 			'no-magic-numbers': 'off',
-			'@typescript-eslint/no-unused-vars': 'error',
-			'@typescript-eslint/explicit-function-return-type': 'error',
+			'@typescript-eslint/no-unused-vars': [
+				'error',
+				{
+					args: 'all',
+					argsIgnorePattern: '^_',
+					caughtErrors: 'all',
+					caughtErrorsIgnorePattern: '^_',
+					destructuredArrayIgnorePattern: '^_',
+					varsIgnorePattern: '^_',
+					ignoreRestSiblings: true
+				}
+			],
+			'@typescript-eslint/explicit-function-return-type': 'off',
 			'@typescript-eslint/strict-boolean-expressions': 'off',
 			'@typescript-eslint/no-extraneous-class': 'off',
-			'@typescript-eslint/no-magic-numbers': 'error',
+			'@typescript-eslint/no-magic-numbers': 'off',
 			'@typescript-eslint/no-unsafe-argument': 'off'
 		}
 	}

@@ -1,0 +1,153 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("POSTGRESQL_URL")
+}
+
+enum Role {
+  ADMIN
+  USER
+}
+
+enum PaymentMethod {
+  CASH
+  CARD
+  YAPE
+  PLIN
+  TRANSFER
+}
+
+model User {
+  id        Int       @id @default(autoincrement())
+  name      String
+  lastname  String
+  email     String
+  dni       String    @unique
+  password  String
+  role      Role      @default(USER)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime? @updatedAt
+
+  order Order[]
+}
+
+model Customer {
+  id        Int       @id @default(autoincrement())
+  name      String
+  lastName  String
+  email     String
+  dni       String    @unique
+  phone     String
+  createdAt DateTime  @default(now())
+  updatedAt DateTime? @updatedAt
+
+  Order Order[]
+}
+
+model Supplier {
+  id          Int       @id @default(autoincrement())
+  nameContact String
+  email       String
+  phone       String
+  razonSocial String
+  ruc         String
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime? @updatedAt
+
+  purchase Purchase[]
+}
+
+model Category {
+  id        Int       @id @default(autoincrement())
+  name      String
+  createdAt DateTime  @default(now())
+  updatedAt DateTime? @updatedAt
+
+  product Product[]
+}
+
+model Product {
+  id          Int       @id @default(autoincrement())
+  name        String
+  description String
+  categoryId  Int
+  image       String
+  material    String
+  price       Decimal
+  stock       Int       @default(0)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime? @updatedAt
+
+  category       Category         @relation(fields: [categoryId], references: [id])
+  orderDetail    OrderDetail[]
+  purchaseDetail PurchaseDetail[]
+  refund         Refund[]
+}
+
+model Purchase {
+  id         Int       @id @default(autoincrement())
+  supplierId Int
+  date       DateTime  @default(now())
+  total      Decimal
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime? @updatedAt
+
+  supplier       Supplier         @relation(fields: [supplierId], references: [id])
+  purchaseDetail PurchaseDetail[]
+  refund         Refund[]
+}
+
+model Order {
+  id            Int           @id @default(autoincrement())
+  customerId    Int
+  userId        Int
+  date          DateTime      @default(now())
+  paymentMethod PaymentMethod @default(CASH)
+  totalDesc     Decimal
+  total         Decimal
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime?     @updatedAt
+
+  customer    Customer      @relation(fields: [customerId], references: [id])
+  user        User          @relation(fields: [userId], references: [id])
+  orderDetail OrderDetail[]
+}
+
+model OrderDetail {
+  id        Int     @id @default(autoincrement())
+  orderId   Int
+  productId Int
+  quantity  Int
+  unitPrice Decimal
+
+  order   Order   @relation(fields: [orderId], references: [id])
+  product Product @relation(fields: [productId], references: [id])
+}
+
+model PurchaseDetail {
+  id         Int     @id @default(autoincrement())
+  purchaseId Int
+  productId  Int
+  quantity   Int
+  unitPrice  Decimal
+
+  purchase Purchase @relation(fields: [purchaseId], references: [id], onDelete: Cascade)
+  product  Product  @relation(fields: [productId], references: [id])
+}
+
+model Refund {
+  id         Int       @id @default(autoincrement())
+  purchaseId Int
+  productId  Int
+  quantity   Int
+  date       DateTime  @default(now())
+  comment    String
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime? @updatedAt
+
+  purchase Purchase @relation(fields: [purchaseId], references: [id])
+  product  Product  @relation(fields: [productId], references: [id])
+}
