@@ -77,7 +77,7 @@ export class ProductEntity {
 				{ constraint: 'price is required', fields: ['price'] }
 			]);
 
-		if (!stock || stock <= ZERO)
+		if (stock === undefined || stock < ZERO)
 			throw CustomError.badRequest('This entity requires a stock', [
 				{ constraint: 'stock is required', fields: ['stock'] }
 			]);

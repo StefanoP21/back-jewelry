@@ -9,8 +9,7 @@ let product = {
 	categoryId: 1,
 	image: 'imagen/ruta',
 	material: 'Material XD',
-	price: 25.9,
-	stock: 5
+	price: 25.9
 };
 
 const category = {
