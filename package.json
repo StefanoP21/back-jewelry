@@ -5,7 +5,7 @@
 	"scripts": {
 		"prepare": "husky",
 		"dev": "tsnd --respawn --clear src/app.ts",
-		"build": "npx prisma generate && rimraf ./dist && tsc",
+		"build": "rimraf ./dist && tsc",
 		"start": "npm run build && node dist/app.js",
 		"test": "jest --verbose --maxWorkers=1",
 		"test:watch": "jest --watch --maxWorkers=1",
