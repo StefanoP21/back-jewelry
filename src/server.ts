@@ -4,7 +4,7 @@ import cors from 'cors';
 // import compression from 'compression';
 import rateLimit from 'express-rate-limit';
 
-import { HttpCode, ONE_HUNDRED, ONE_THOUSAND, SIXTY } from './core';
+import { HttpCode, ONE_THOUSAND, SIXTY } from './core';
 import { ErrorMiddleware } from './features/shared';
 
 interface ServerOptions {
@@ -38,7 +38,7 @@ export class Server {
 		this.app.use(
 			rateLimit({
 				windowMs: SIXTY * SIXTY * ONE_THOUSAND, // ? 1 hour
-				limit: ONE_HUNDRED,
+				limit: ONE_THOUSAND,
 				message: 'Too many request from this IP, please try again in one hour'
 			})
 		);
