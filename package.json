@@ -14,7 +14,8 @@
 		"format": "eslint . --fix",
 		"prisma:generate": "npx prisma generate",
 		"prisma:migrate": "npx prisma migrate deploy",
-		"prisma:migrate:test": "dotenv -e .env.test -- npx prisma migrate deploy"
+		"prisma:migrate:test": "dotenv -e .env.test -- npx prisma migrate deploy",
+		"postinstall": "npx prisma generate"
 	},
 	"keywords": [],
 	"author": "",
