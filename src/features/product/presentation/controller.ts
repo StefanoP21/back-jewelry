@@ -24,7 +24,6 @@ interface RequestBody {
 	image: string;
 	material: string;
 	price: Decimal;
-	stock: null;
 }
 
 export class ProductController {
@@ -51,7 +50,7 @@ export class ProductController {
 		res: Response<SuccessResponse<ProductEntity>>,
 		next: NextFunction
 	) => {
-		const { name, description, categoryId, image, material, price, stock } = req.body;
+		const { name, description, categoryId, image, material, price } = req.body;
 
 		const createProductDto = CreateProductDto.create({
 			name,
@@ -59,8 +58,7 @@ export class ProductController {
 			categoryId,
 			image,
 			material,
-			price,
-			stock: Number(stock)
+			price
 		});
 
 		new CreateProduct(this.repository)
@@ -75,7 +73,7 @@ export class ProductController {
 		next: NextFunction
 	) => {
 		const { id } = req.params;
-		const { name, description, categoryId, image, material, price, stock } = req.body;
+		const { name, description, categoryId, image, material, price } = req.body;
 
 		const updateProductDto = UpdateProductDto.create({
 			id: Number(id),
@@ -84,8 +82,7 @@ export class ProductController {
 			categoryId,
 			image,
 			material,
-			price,
-			stock: Number(stock)
+			price
 		});
 
 		new UpdateProduct(this.repository)
