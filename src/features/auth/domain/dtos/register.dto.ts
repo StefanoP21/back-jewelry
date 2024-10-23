@@ -1,4 +1,4 @@
-import { CustomError, EIGHT, SIX, type ValidationType, ZERO, REGEX_EMAIL, Role } from '../../../../core';
+import { CustomError, EIGHT, SIX, type ValidationType, ZERO, REGEX_EMAIL, Role, REGEX_DNI } from '../../../../core';
 import { type CoreDto } from '../../../shared';
 
 interface RegisterUserDtoProps {
@@ -44,7 +44,7 @@ export class RegisterUserDto implements CoreDto<RegisterUserDto> {
 				fields: ['email']
 			});
 
-		if (!dni || dni.length !== EIGHT)
+		if (!dni || dni.length !== EIGHT || !REGEX_DNI.test(dni))
 			errors.push({
 				constraint: 'El dni no es válido',
 				fields: ['dni']
