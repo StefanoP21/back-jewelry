@@ -12,6 +12,8 @@ export const ONE_THOUSAND = 1000 as const;
 
 export const REGEX_EMAIL = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
 
+export const REGEX_DNI = /^[0-9]{8}$/;
+
 export type Role = 'ADMIN' | 'USER';
 
 export enum HttpCode {
