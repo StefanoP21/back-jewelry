@@ -6,11 +6,13 @@ interface PurchaseDetailDtoProps {
 	productId: number;
 	quantity: number;
 	unitPrice: Decimal;
+	profit: Decimal;
 }
 
 interface PurchaseDtoProps {
 	supplierId: number;
 	total: Decimal;
+	bill: string;
 	purchaseDetail: PurchaseDetailDtoProps[];
 }
 
@@ -18,6 +20,7 @@ export class PurchaseDto implements CoreDto<PurchaseDto> {
 	private constructor(
 		public readonly supplierId: number,
 		public readonly total: Decimal,
+		public readonly bill: string,
 		public readonly purchaseDetail: PurchaseDetailDtoProps[]
 	) {
 		this.validate(this);
@@ -25,7 +28,7 @@ export class PurchaseDto implements CoreDto<PurchaseDto> {
 
 	public validate(dto: PurchaseDto): void {
 		const errors: ValidationType[] = [];
-		const { supplierId, total, purchaseDetail } = dto;
+		const { supplierId, total, bill, purchaseDetail } = dto;
 
 		if (!supplierId || supplierId <= ZERO)
 			errors.push({
@@ -37,6 +40,12 @@ export class PurchaseDto implements CoreDto<PurchaseDto> {
 			errors.push({
 				constraint: 'El total es obligatorio',
 				fields: ['total']
+			});
+
+		if (!bill || bill.length === ZERO)
+			errors.push({
+				constraint: 'La factura es obligatoria',
+				fields: ['bill']
 			});
 
 		if (!purchaseDetail || purchaseDetail.length === ZERO)
@@ -63,14 +72,20 @@ export class PurchaseDto implements CoreDto<PurchaseDto> {
 					constraint: 'El precio unitario es obligatorio',
 					fields: ['product.unitPrice']
 				});
+
+			if (!product.profit || parseFloat(product.profit.toString()) < ZERO)
+				errors.push({
+					constraint: 'El margen de ganancia es obligatorio',
+					fields: ['product.profit']
+				});
 		});
 
 		if (errors.length > ZERO) throw CustomError.badRequest('Error validando la compra al proveedor', errors);
 	}
 
 	static create(object: PurchaseDtoProps): PurchaseDto {
-		const { supplierId, total, purchaseDetail } = object;
+		const { supplierId, total, bill, purchaseDetail } = object;
 
-		return new PurchaseDto(supplierId, total, purchaseDetail);
+		return new PurchaseDto(supplierId, total, bill, purchaseDetail);
 	}
 }

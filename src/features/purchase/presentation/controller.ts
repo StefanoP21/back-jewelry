@@ -20,11 +20,13 @@ interface PurchaseDetailRequestBody {
 	productId: number;
 	quantity: number;
 	unitPrice: Decimal;
+	profit: Decimal;
 }
 
 interface RequestBody {
 	supplierId: number;
 	total: Decimal;
+	bill: string;
 	purchaseDetail: PurchaseDetailRequestBody[];
 }
 
@@ -52,11 +54,12 @@ export class PurchaseController {
 		res: Response<SuccessResponse<PurchaseEntity>>,
 		next: NextFunction
 	) => {
-		const { supplierId, total, purchaseDetail } = req.body;
+		const { supplierId, total, bill, purchaseDetail } = req.body;
 
 		const purchaseDto = PurchaseDto.create({
 			supplierId,
 			total,
+			bill,
 			purchaseDetail
 		});
 

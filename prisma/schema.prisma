@@ -52,7 +52,7 @@ model Supplier {
   nameContact String
   email       String
   phone       String
-  razonSocial String
+  companyName String
   ruc         String
   createdAt   DateTime  @default(now())
   updatedAt   DateTime? @updatedAt
@@ -76,7 +76,7 @@ model Product {
   categoryId  Int
   image       String
   material    String
-  price       Decimal
+  price       Decimal   @default(0)
   stock       Int       @default(0)
   createdAt   DateTime  @default(now())
   updatedAt   DateTime? @updatedAt
@@ -92,6 +92,7 @@ model Purchase {
   supplierId Int
   date       DateTime  @default(now())
   total      Decimal
+  bill       String
   createdAt  DateTime  @default(now())
   updatedAt  DateTime? @updatedAt
 
@@ -133,6 +134,7 @@ model PurchaseDetail {
   productId  Int
   quantity   Int
   unitPrice  Decimal
+  profit     Decimal
 
   purchase Purchase @relation(fields: [purchaseId], references: [id], onDelete: Cascade)
   product  Product  @relation(fields: [productId], references: [id])

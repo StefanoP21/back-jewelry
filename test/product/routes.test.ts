@@ -8,8 +8,7 @@ let product = {
 	description: 'Este es un proyecto de prueba',
 	categoryId: 1,
 	image: 'imagen/ruta',
-	material: 'Material XD',
-	price: 25.9
+	material: 'Material XD'
 };
 
 const category = {

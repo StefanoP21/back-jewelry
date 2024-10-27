@@ -50,15 +50,14 @@ export class ProductController {
 		res: Response<SuccessResponse<ProductEntity>>,
 		next: NextFunction
 	) => {
-		const { name, description, categoryId, image, material, price } = req.body;
+		const { name, description, categoryId, image, material } = req.body;
 
 		const createProductDto = CreateProductDto.create({
 			name,
 			description,
 			categoryId,
 			image,
-			material,
-			price
+			material
 		});
 
 		new CreateProduct(this.repository)
