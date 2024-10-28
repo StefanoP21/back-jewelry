@@ -72,7 +72,7 @@ export class ProductEntity {
 				{ constraint: 'material is required', fields: ['material'] }
 			]);
 
-		if (!price || price.toNumber() <= ZERO)
+		if (price === undefined || price.toNumber() < ZERO)
 			throw CustomError.badRequest('This entity requires a price', [
 				{ constraint: 'price is required', fields: ['price'] }
 			]);

@@ -10,9 +10,11 @@ export const SIXTY = 60 as const;
 export const ONE_HUNDRED = 100 as const;
 export const ONE_THOUSAND = 1000 as const;
 
+export const IGV = 1.18;
+
 export const REGEX_EMAIL = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
 
-export const REGEX_DNI = /^[0-9]{8}$/;
+export const REGEX_DNI = /^(?!0{3,})(?!(\d)\1{7})\d{8}$/;
 
 export type Role = 'ADMIN' | 'USER';
 

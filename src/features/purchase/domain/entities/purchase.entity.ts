@@ -7,6 +7,7 @@ interface PurchaseDetailEntityProps {
 	productId: number;
 	quantity: number;
 	unitPrice: Decimal;
+	profit: Decimal;
 }
 
 interface PurchaseEntityProps {
@@ -14,6 +15,7 @@ interface PurchaseEntityProps {
 	supplierId: number;
 	date: Date;
 	total: Decimal;
+	bill: string;
 	purchaseDetail: PurchaseDetailEntityProps[];
 }
 
@@ -23,11 +25,12 @@ export class PurchaseEntity {
 		public readonly supplierId: number,
 		public readonly date: Date,
 		public readonly total: Decimal,
+		public readonly bill: string,
 		public readonly purchaseDetail: PurchaseDetailEntityProps[]
 	) {}
 
 	static fromObject(object: PurchaseEntityProps): PurchaseEntity {
-		const { id, supplierId, date, total, purchaseDetail } = object;
+		const { id, supplierId, date, total, bill, purchaseDetail } = object;
 
 		if (!id)
 			throw CustomError.badRequest('This entity requires an id', [{ constraint: 'id is required', fields: ['id'] }]);
@@ -45,6 +48,11 @@ export class PurchaseEntity {
 		if (!total || parseFloat(total.toString()) <= ZERO)
 			throw CustomError.badRequest('This entity requires a total', [
 				{ constraint: 'total is required', fields: ['total'] }
+			]);
+
+		if (!bill || bill.length === ZERO)
+			throw CustomError.badRequest('This entity requires a bill', [
+				{ constraint: 'bill is required', fields: ['bill'] }
 			]);
 
 		if (!purchaseDetail || purchaseDetail.length === ZERO)
@@ -68,6 +76,11 @@ export class PurchaseEntity {
 					{ constraint: 'product.unitPrice is required', fields: ['product.unitPrice'] }
 				]);
 
+			if (!product.profit || parseFloat(product.profit.toString()) <= ZERO)
+				throw CustomError.badRequest('purchaseDetail entities requires a profit', [
+					{ constraint: 'product.profit is required', fields: ['product.profit'] }
+				]);
+
 			if (!product.id)
 				throw CustomError.badRequest('purchaseDetail entities requires an id', [
 					{ constraint: 'product.id is required', fields: ['product.id'] }
@@ -79,6 +92,6 @@ export class PurchaseEntity {
 				]);
 		});
 
-		return new PurchaseEntity(id, supplierId, date, total, purchaseDetail);
+		return new PurchaseEntity(id, supplierId, date, total, bill, purchaseDetail);
 	}
 }
