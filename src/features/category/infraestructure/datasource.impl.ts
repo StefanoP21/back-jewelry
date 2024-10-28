@@ -7,7 +7,7 @@ export class CategoryDatasourceImpl implements CategoryDatasource {
 
 	async getAll(): Promise<CategoryEntity[]> {
 		try {
-			const categories = await prisma.category.findMany();
+			const categories = await prisma.category.findMany({ orderBy: { name: 'asc' } });
 			return categories.map((category) => CategoryEntity.fromObject(category));
 		} catch (error) {
 			if (error instanceof CustomError) throw error;

@@ -10,7 +10,8 @@ export class PurchaseDatasourceImpl implements PurchaseDatasource {
 			const purchases = await prisma.purchase.findMany({
 				include: {
 					purchaseDetail: true
-				}
+				},
+				orderBy: { createdAt: 'desc' }
 			});
 
 			return purchases.map((purchase) => PurchaseEntity.fromObject(purchase));

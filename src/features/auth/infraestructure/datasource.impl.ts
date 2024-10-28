@@ -112,7 +112,7 @@ export class AuthDatasourceImpl implements AuthDatasource {
 
 	async getAll(): Promise<UserResponseEntity[]> {
 		try {
-			const users = await prisma.user.findMany();
+			const users = await prisma.user.findMany({ orderBy: [{ role: 'asc' }, { name: 'asc' }] });
 
 			return users.map((user) => {
 				const { password, ...rest } = UserEntity.fromObject(user);
