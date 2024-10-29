@@ -85,7 +85,7 @@ export class PurchaseDatasourceImpl implements PurchaseDatasource {
 					where: { id: product.productId },
 					data: {
 						stock: {
-							increment: -product.quantity
+							decrement: product.quantity
 						}
 					}
 				});

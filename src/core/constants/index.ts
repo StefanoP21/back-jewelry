@@ -49,6 +49,9 @@ export enum ErrorMessages {
 	//* PURCHASE
 	PURCHASE_NOT_FOUND = 'Compra no encontrada',
 
+	//* REFUND
+	REFUND_NOT_FOUND = 'Devolución no encontrada',
+
 	//* TOKEN
 	TOKEN_NOT_FOUND = 'No hay un token en la petición',
 	WRONG_AUTHORIZATION_HEADER = 'Header de autorización no válido (se requiere Bearer token)',
