@@ -3,6 +3,7 @@ import { AuthMiddleware, AuthRoutes } from './features/auth';
 import { CategoryRoutes } from './features/category';
 import { ProductRoutes } from './features/product';
 import { PurchaseRoutes } from './features/purchase';
+import { RefundRoutes } from './features/refund';
 import { AuthDatasourceImpl, AuthRepositoryImpl } from './features/auth/infraestructure';
 import { BcryptAdapter } from './core';
 
@@ -18,6 +19,7 @@ export class AppRoutes {
 		router.use('/category', [authMiddleware.validateJWT], CategoryRoutes.routes);
 		router.use('/product', [authMiddleware.validateJWT], ProductRoutes.routes);
 		router.use('/purchase', [authMiddleware.validateJWT], PurchaseRoutes.routes);
+		router.use('/refund', [authMiddleware.validateJWT], RefundRoutes.routes);
 
 		return router;
 	}
