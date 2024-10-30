@@ -1,4 +1,4 @@
-import { CustomError, ZERO } from '../../../../core';
+import { CustomError, EIGHT, REGEX_DNI, ZERO } from '../../../../core';
 import { Decimal } from '../../../../data/postgresql';
 
 interface PurchaseDetailEntityProps {
@@ -16,6 +16,7 @@ interface PurchaseEntityProps {
 	date: Date;
 	total: Decimal;
 	bill: string;
+	userDNI: string;
 	purchaseDetail: PurchaseDetailEntityProps[];
 }
 
@@ -26,11 +27,12 @@ export class PurchaseEntity {
 		public readonly date: Date,
 		public readonly total: Decimal,
 		public readonly bill: string,
+		public readonly userDNI: string,
 		public readonly purchaseDetail: PurchaseDetailEntityProps[]
 	) {}
 
 	static fromObject(object: PurchaseEntityProps): PurchaseEntity {
-		const { id, supplierId, date, total, bill, purchaseDetail } = object;
+		const { id, supplierId, date, total, bill, userDNI, purchaseDetail } = object;
 
 		if (!id)
 			throw CustomError.badRequest('This entity requires an id', [{ constraint: 'id is required', fields: ['id'] }]);
@@ -53,6 +55,11 @@ export class PurchaseEntity {
 		if (!bill || bill.length === ZERO)
 			throw CustomError.badRequest('This entity requires a bill', [
 				{ constraint: 'bill is required', fields: ['bill'] }
+			]);
+
+		if (!userDNI || userDNI.length !== EIGHT || !REGEX_DNI.test(userDNI))
+			throw CustomError.badRequest('This entity requires a userDNI', [
+				{ constraint: 'userDNI is required', fields: ['userDNI'] }
 			]);
 
 		if (!purchaseDetail || purchaseDetail.length === ZERO)
@@ -92,6 +99,6 @@ export class PurchaseEntity {
 				]);
 		});
 
-		return new PurchaseEntity(id, supplierId, date, total, bill, purchaseDetail);
+		return new PurchaseEntity(id, supplierId, date, total, bill, userDNI, purchaseDetail);
 	}
 }

@@ -7,6 +7,7 @@ let purchase = {
 	supplierId: 1,
 	total: 150.5,
 	bill: 'Factura de Prueba',
+	userDNI: '77229991',
 	purchaseDetail: [
 		{
 			productId: 1,
@@ -98,6 +99,7 @@ describe('Testing purchase routes', () => {
 				date: expect.any(String),
 				total: expect.any(String),
 				bill: expect.any(String),
+				userDNI: expect.any(String),
 				purchaseDetail: expect.any(Array)
 			}
 		});
@@ -129,6 +131,7 @@ describe('Testing purchase routes', () => {
 				date: expect.any(String),
 				total: expect.any(String),
 				bill: expect.any(String),
+				userDNI: expect.any(String),
 				purchaseDetail: expect.any(Array)
 			}
 		});
@@ -149,6 +152,7 @@ describe('Testing purchase routes', () => {
 				date: expect.any(String),
 				total: expect.any(String),
 				bill: expect.any(String),
+				userDNI: expect.any(String),
 				purchaseDetail: expect.any(Array)
 			}
 		});

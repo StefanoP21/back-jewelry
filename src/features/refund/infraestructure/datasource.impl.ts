@@ -11,6 +11,7 @@ export class RefundDatasourceImpl implements RefundDatasource {
 				data: {
 					purchaseId: dto.purchaseId,
 					comment: dto.comment,
+					userDNI: dto.userDNI,
 					refundDetail: {
 						create: dto.refundDetail
 					}

@@ -1,4 +1,4 @@
-import { CustomError, ZERO } from '../../../../core';
+import { CustomError, EIGHT, REGEX_DNI, ZERO } from '../../../../core';
 import { Decimal } from '../../../../data/postgresql';
 
 interface PurchaseDetailEntityProps {
@@ -21,6 +21,7 @@ interface RefundEntityProps {
 	purchaseId: number;
 	date: Date;
 	comment: string;
+	userDNI: string;
 	refundDetail: RefundDetailEntityProps[];
 }
 
@@ -30,11 +31,12 @@ export class RefundEntity {
 		public readonly purchaseId: number,
 		public readonly date: Date,
 		public readonly comment: string,
+		public readonly userDNI: string,
 		public readonly refundDetail: RefundDetailEntityProps[]
 	) {}
 
 	static fromObject(object: RefundEntityProps): RefundEntity {
-		const { id, purchaseId, date, comment, refundDetail } = object;
+		const { id, purchaseId, date, comment, userDNI, refundDetail } = object;
 
 		if (!id)
 			throw CustomError.badRequest('This entity requires an id', [{ constraint: 'id is required', fields: ['id'] }]);
@@ -52,6 +54,11 @@ export class RefundEntity {
 		if (!comment || comment.length === ZERO)
 			throw CustomError.badRequest('This entity requires a comment', [
 				{ constraint: 'comment is required', fields: ['comment'] }
+			]);
+
+		if (!userDNI || userDNI.length !== EIGHT || !REGEX_DNI.test(userDNI))
+			throw CustomError.badRequest('This entity requires a userDNI', [
+				{ constraint: 'userDNI is required', fields: ['userDNI'] }
 			]);
 
 		if (!refundDetail || refundDetail.length === ZERO)
@@ -81,6 +88,6 @@ export class RefundEntity {
 				]);
 		});
 
-		return new RefundEntity(id, purchaseId, date, comment, refundDetail);
+		return new RefundEntity(id, purchaseId, date, comment, userDNI, refundDetail);
 	}
 }

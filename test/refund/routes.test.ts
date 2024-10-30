@@ -6,6 +6,7 @@ import { ErrorMessages, ErrorType, HttpCode } from '../../src/core';
 let refund = {
 	purchaseId: 1,
 	comment: 'Este es un comentario de prueba',
+	userDNI: '77229991',
 	refundDetail: [
 		{
 			purchaseDetailId: 1,
@@ -18,6 +19,7 @@ let purchase = {
 	supplierId: 1,
 	total: 150.5,
 	bill: 'Factura de Prueba',
+	userDNI: '77229991',
 	purchaseDetail: [
 		{
 			productId: 1,
@@ -118,6 +120,7 @@ describe('Testing refund routes', () => {
 				purchaseId: expect.any(Number),
 				date: expect.any(String),
 				comment: expect.any(String),
+				userDNI: expect.any(String),
 				refundDetail: expect.any(Array)
 			}
 		});
@@ -148,6 +151,7 @@ describe('Testing refund routes', () => {
 				purchaseId: expect.any(Number),
 				date: expect.any(String),
 				comment: expect.any(String),
+				userDNI: expect.any(String),
 				refundDetail: expect.any(Array)
 			}
 		});
@@ -167,6 +171,7 @@ describe('Testing refund routes', () => {
 				purchaseId: expect.any(Number),
 				date: expect.any(String),
 				comment: expect.any(String),
+				userDNI: expect.any(String),
 				refundDetail: expect.any(Array)
 			}
 		});

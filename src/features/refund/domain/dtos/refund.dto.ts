@@ -1,4 +1,4 @@
-import { CustomError, type ValidationType, ZERO } from '../../../../core';
+import { CustomError, EIGHT, REGEX_DNI, type ValidationType, ZERO } from '../../../../core';
 import { type CoreDto } from '../../../shared';
 
 interface RefundDetailDtoProps {
@@ -9,6 +9,7 @@ interface RefundDetailDtoProps {
 interface RefundDtoProps {
 	purchaseId: number;
 	comment: string;
+	userDNI: string;
 	refundDetail: RefundDetailDtoProps[];
 }
 
@@ -16,6 +17,7 @@ export class RefundDto implements CoreDto<RefundDto> {
 	private constructor(
 		public readonly purchaseId: number,
 		public readonly comment: string,
+		public readonly userDNI: string,
 		public readonly refundDetail: RefundDetailDtoProps[]
 	) {
 		this.validate(this);
@@ -23,7 +25,7 @@ export class RefundDto implements CoreDto<RefundDto> {
 
 	validate(dto: RefundDto): void {
 		const errors: ValidationType[] = [];
-		const { purchaseId, comment, refundDetail } = dto;
+		const { purchaseId, comment, userDNI, refundDetail } = dto;
 
 		if (!purchaseId || purchaseId <= ZERO)
 			errors.push({
@@ -35,6 +37,12 @@ export class RefundDto implements CoreDto<RefundDto> {
 			errors.push({
 				constraint: 'El comentario es obligatorio',
 				fields: ['comment']
+			});
+
+		if (!userDNI || userDNI.length !== EIGHT || !REGEX_DNI.test(userDNI))
+			errors.push({
+				constraint: 'El dni es obligatorio',
+				fields: ['userDNI']
 			});
 
 		if (!refundDetail || refundDetail.length === ZERO)
@@ -61,8 +69,8 @@ export class RefundDto implements CoreDto<RefundDto> {
 	}
 
 	static create(object: RefundDtoProps): RefundDto {
-		const { purchaseId, comment, refundDetail } = object;
+		const { purchaseId, comment, userDNI, refundDetail } = object;
 
-		return new RefundDto(purchaseId, comment, refundDetail);
+		return new RefundDto(purchaseId, comment, userDNI, refundDetail);
 	}
 }

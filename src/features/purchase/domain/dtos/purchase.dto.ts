@@ -1,4 +1,4 @@
-import { CustomError, type ValidationType, ZERO } from '../../../../core';
+import { CustomError, EIGHT, REGEX_DNI, type ValidationType, ZERO } from '../../../../core';
 import { Decimal } from '../../../../data/postgresql';
 import { type CoreDto } from '../../../shared';
 
@@ -13,6 +13,7 @@ interface PurchaseDtoProps {
 	supplierId: number;
 	total: Decimal;
 	bill: string;
+	userDNI: string;
 	purchaseDetail: PurchaseDetailDtoProps[];
 }
 
@@ -21,6 +22,7 @@ export class PurchaseDto implements CoreDto<PurchaseDto> {
 		public readonly supplierId: number,
 		public readonly total: Decimal,
 		public readonly bill: string,
+		public readonly userDNI: string,
 		public readonly purchaseDetail: PurchaseDetailDtoProps[]
 	) {
 		this.validate(this);
@@ -28,7 +30,7 @@ export class PurchaseDto implements CoreDto<PurchaseDto> {
 
 	public validate(dto: PurchaseDto): void {
 		const errors: ValidationType[] = [];
-		const { supplierId, total, bill, purchaseDetail } = dto;
+		const { supplierId, total, bill, purchaseDetail, userDNI } = dto;
 
 		if (!supplierId || supplierId <= ZERO)
 			errors.push({
@@ -46,6 +48,12 @@ export class PurchaseDto implements CoreDto<PurchaseDto> {
 			errors.push({
 				constraint: 'La factura es obligatoria',
 				fields: ['bill']
+			});
+
+		if (!userDNI || userDNI.length !== EIGHT || !REGEX_DNI.test(userDNI))
+			errors.push({
+				constraint: 'El dni es obligatorio',
+				fields: ['userDNI']
 			});
 
 		if (!purchaseDetail || purchaseDetail.length === ZERO)
@@ -84,8 +92,8 @@ export class PurchaseDto implements CoreDto<PurchaseDto> {
 	}
 
 	static create(object: PurchaseDtoProps): PurchaseDto {
-		const { supplierId, total, bill, purchaseDetail } = object;
+		const { supplierId, total, bill, userDNI, purchaseDetail } = object;
 
-		return new PurchaseDto(supplierId, total, bill, purchaseDetail);
+		return new PurchaseDto(supplierId, total, bill, userDNI, purchaseDetail);
 	}
 }

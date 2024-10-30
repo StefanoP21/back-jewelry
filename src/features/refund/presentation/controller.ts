@@ -23,6 +23,7 @@ interface RefundDetailRequestBody {
 interface RequestBody {
 	purchaseId: number;
 	comment: string;
+	userDNI: string;
 	refundDetail: RefundDetailRequestBody[];
 }
 
@@ -50,11 +51,12 @@ export class RefundController {
 		res: Response<SuccessResponse<RefundEntity>>,
 		next: NextFunction
 	) => {
-		const { purchaseId, comment, refundDetail } = req.body;
+		const { purchaseId, comment, userDNI, refundDetail } = req.body;
 
 		const refundDto = RefundDto.create({
 			purchaseId,
 			comment,
+			userDNI,
 			refundDetail
 		});
 

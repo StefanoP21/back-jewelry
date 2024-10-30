@@ -41,6 +41,7 @@ export class PurchaseDatasourceImpl implements PurchaseDatasource {
 					supplierId: dto.supplierId,
 					total: dto.total,
 					bill: dto.bill,
+					userDNI: dto.userDNI,
 					purchaseDetail: {
 						create: dto.purchaseDetail
 					}
