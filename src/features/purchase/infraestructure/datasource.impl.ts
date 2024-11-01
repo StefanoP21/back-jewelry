@@ -9,7 +9,27 @@ export class PurchaseDatasourceImpl implements PurchaseDatasource {
 		try {
 			const purchases = await prisma.purchase.findMany({
 				include: {
-					purchaseDetail: true
+					supplier: {
+						select: {
+							id: true,
+							nameContact: true,
+							companyName: true,
+							email: true,
+							phone: true,
+							ruc: true
+						}
+					},
+					purchaseDetail: {
+						include: {
+							product: {
+								select: {
+									id: true,
+									name: true,
+									image: true
+								}
+							}
+						}
+					}
 				},
 				orderBy: { createdAt: 'desc' }
 			});
@@ -23,7 +43,10 @@ export class PurchaseDatasourceImpl implements PurchaseDatasource {
 
 	async getById(id: number): Promise<PurchaseEntity> {
 		try {
-			const purchase = await prisma.purchase.findUnique({ where: { id }, include: { purchaseDetail: true } });
+			const purchase = await prisma.purchase.findUnique({
+				where: { id },
+				include: { supplier: true, purchaseDetail: true }
+			});
 
 			if (!purchase) throw CustomError.notFound(ErrorMessages.PURCHASE_NOT_FOUND);
 
@@ -47,6 +70,7 @@ export class PurchaseDatasourceImpl implements PurchaseDatasource {
 					}
 				},
 				include: {
+					supplier: true,
 					purchaseDetail: true
 				}
 			});
@@ -78,7 +102,7 @@ export class PurchaseDatasourceImpl implements PurchaseDatasource {
 
 			const deletedPurchase = await prisma.purchase.delete({
 				where: { id: purchaseId },
-				include: { purchaseDetail: true }
+				include: { supplier: true, purchaseDetail: true }
 			});
 
 			for (const product of deletedPurchase.purchaseDetail) {

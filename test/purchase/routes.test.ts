@@ -96,6 +96,7 @@ describe('Testing purchase routes', () => {
 			data: {
 				id: expect.any(Number),
 				supplierId: expect.any(Number),
+				supplier: expect.any(Object),
 				date: expect.any(String),
 				total: expect.any(String),
 				bill: expect.any(String),
@@ -128,6 +129,7 @@ describe('Testing purchase routes', () => {
 			data: {
 				id: expect.any(Number),
 				supplierId: expect.any(Number),
+				supplier: expect.any(Object),
 				date: expect.any(String),
 				total: expect.any(String),
 				bill: expect.any(String),
@@ -149,6 +151,7 @@ describe('Testing purchase routes', () => {
 			data: {
 				id: expect.any(Number),
 				supplierId: expect.any(Number),
+				supplier: expect.any(Object),
 				date: expect.any(String),
 				total: expect.any(String),
 				bill: expect.any(String),
