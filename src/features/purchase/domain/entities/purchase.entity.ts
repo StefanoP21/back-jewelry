@@ -10,9 +10,19 @@ interface PurchaseDetailEntityProps {
 	profit: Decimal;
 }
 
+interface SupplierDetailPurchaseEntityProps {
+	id: number;
+	nameContact: string;
+	companyName: string;
+	email: string;
+	phone: string;
+	ruc: string;
+}
+
 interface PurchaseEntityProps {
 	id: number;
 	supplierId: number;
+	supplier: SupplierDetailPurchaseEntityProps;
 	date: Date;
 	total: Decimal;
 	bill: string;
@@ -24,6 +34,7 @@ export class PurchaseEntity {
 	constructor(
 		public readonly id: number,
 		public readonly supplierId: number,
+		public readonly supplier: SupplierDetailPurchaseEntityProps,
 		public readonly date: Date,
 		public readonly total: Decimal,
 		public readonly bill: string,
@@ -32,7 +43,7 @@ export class PurchaseEntity {
 	) {}
 
 	static fromObject(object: PurchaseEntityProps): PurchaseEntity {
-		const { id, supplierId, date, total, bill, userDNI, purchaseDetail } = object;
+		const { id, supplierId, supplier, date, total, bill, userDNI, purchaseDetail } = object;
 
 		if (!id)
 			throw CustomError.badRequest('This entity requires an id', [{ constraint: 'id is required', fields: ['id'] }]);
@@ -40,6 +51,11 @@ export class PurchaseEntity {
 		if (!supplierId)
 			throw CustomError.badRequest('This entity requires a supplierId', [
 				{ constraint: 'supplierId is required', fields: ['supplierId'] }
+			]);
+
+		if (!supplier)
+			throw CustomError.badRequest('This entity requires a supplier', [
+				{ constraint: 'supplier is required', fields: ['supplier'] }
 			]);
 
 		if (!date)
@@ -99,6 +115,6 @@ export class PurchaseEntity {
 				]);
 		});
 
-		return new PurchaseEntity(id, supplierId, date, total, bill, userDNI, purchaseDetail);
+		return new PurchaseEntity(id, supplierId, supplier, date, total, bill, userDNI, purchaseDetail);
 	}
 }
