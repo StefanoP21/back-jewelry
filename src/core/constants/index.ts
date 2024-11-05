@@ -18,6 +18,8 @@ export const REGEX_DNI = /^(?!0{3,})(?!(\d)\1{7})\d{8}$/;
 
 export const REGEX_PHONE = /^[0-9]{9}$/;
 
+export const REGEX_RUC = /^(10|15|16|17|20)\d{9}$/;
+
 export type Role = 'ADMIN' | 'USER';
 
 export enum HttpCode {
@@ -66,5 +68,8 @@ export enum ErrorMessages {
 	CATEGORY_NOT_FOUND = 'Categoría no encontrada',
 
 	//* CUSTOMER
-	CUSTOMER_NOT_FOUND = 'Cliente no encontrado'
+	CUSTOMER_NOT_FOUND = 'Cliente no encontrado',
+
+	//* SUPPLIER
+	SUPPLIER_NOT_FOUND = 'Proveedor no encontrado'
 }

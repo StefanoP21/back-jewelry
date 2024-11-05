@@ -5,7 +5,7 @@ export interface GetAllCustomersUseCase {
 	execute(): Promise<CustomerEntity[]>;
 }
 
-export class GetAllCustomers implements GetAllCustomers {
+export class GetAllCustomers implements GetAllCustomersUseCase {
 	constructor(private readonly repository: CustomerRepository) {}
 
 	execute(): Promise<CustomerEntity[]> {
