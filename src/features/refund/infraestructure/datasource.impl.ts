@@ -17,14 +17,36 @@ export class RefundDatasourceImpl implements RefundDatasource {
 					}
 				},
 				include: {
+					purchase: {
+						select: {
+							bill: true,
+							supplier: {
+								select: {
+									id: true,
+									nameContact: true,
+									companyName: true,
+									email: true,
+									phone: true,
+									ruc: true
+								}
+							}
+						}
+					},
 					refundDetail: {
 						include: {
 							purchaseDetail: {
 								select: {
 									id: true,
 									productId: true,
+									unitPrice: true,
 									quantity: true,
-									unitPrice: true
+									product: {
+										select: {
+											image: true,
+											name: true,
+											description: true
+										}
+									}
 								}
 							}
 						}
@@ -41,6 +63,15 @@ export class RefundDatasourceImpl implements RefundDatasource {
 						}
 					}
 				});
+
+				await prisma.purchaseDetail.update({
+					where: { id: product.purchaseDetail.id },
+					data: {
+						quantity: {
+							decrement: product.quantity
+						}
+					}
+				});
 			}
 
 			return RefundEntity.fromObject(refunds);
@@ -53,14 +84,36 @@ export class RefundDatasourceImpl implements RefundDatasource {
 		try {
 			const refunds = await prisma.refund.findMany({
 				include: {
+					purchase: {
+						select: {
+							bill: true,
+							supplier: {
+								select: {
+									id: true,
+									nameContact: true,
+									companyName: true,
+									email: true,
+									phone: true,
+									ruc: true
+								}
+							}
+						}
+					},
 					refundDetail: {
 						include: {
 							purchaseDetail: {
 								select: {
 									id: true,
 									productId: true,
+									unitPrice: true,
 									quantity: true,
-									unitPrice: true
+									product: {
+										select: {
+											image: true,
+											name: true,
+											description: true
+										}
+									}
 								}
 							}
 						}
@@ -81,14 +134,36 @@ export class RefundDatasourceImpl implements RefundDatasource {
 			const refund = await prisma.refund.findUnique({
 				where: { id },
 				include: {
+					purchase: {
+						select: {
+							bill: true,
+							supplier: {
+								select: {
+									id: true,
+									nameContact: true,
+									companyName: true,
+									email: true,
+									phone: true,
+									ruc: true
+								}
+							}
+						}
+					},
 					refundDetail: {
 						include: {
 							purchaseDetail: {
 								select: {
 									id: true,
 									productId: true,
+									unitPrice: true,
 									quantity: true,
-									unitPrice: true
+									product: {
+										select: {
+											image: true,
+											name: true,
+											description: true
+										}
+									}
 								}
 							}
 						}
@@ -112,14 +187,36 @@ export class RefundDatasourceImpl implements RefundDatasource {
 			const refund = await prisma.refund.delete({
 				where: { id: refundId },
 				include: {
+					purchase: {
+						select: {
+							bill: true,
+							supplier: {
+								select: {
+									id: true,
+									nameContact: true,
+									companyName: true,
+									email: true,
+									phone: true,
+									ruc: true
+								}
+							}
+						}
+					},
 					refundDetail: {
 						include: {
 							purchaseDetail: {
 								select: {
 									id: true,
 									productId: true,
+									unitPrice: true,
 									quantity: true,
-									unitPrice: true
+									product: {
+										select: {
+											image: true,
+											name: true,
+											description: true
+										}
+									}
 								}
 							}
 						}
@@ -132,6 +229,15 @@ export class RefundDatasourceImpl implements RefundDatasource {
 					where: { id: product.purchaseDetail.productId },
 					data: {
 						stock: {
+							increment: product.quantity
+						}
+					}
+				});
+
+				await prisma.purchaseDetail.update({
+					where: { id: product.purchaseDetail.id },
+					data: {
+						quantity: {
 							increment: product.quantity
 						}
 					}

@@ -10,7 +10,7 @@ interface PurchaseDetailEntityProps {
 	profit: Decimal;
 }
 
-interface SupplierDetailPurchaseEntityProps {
+export interface SupplierDetailPurchaseEntityProps {
 	id: number;
 	nameContact: string;
 	companyName: string;

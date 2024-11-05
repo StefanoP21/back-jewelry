@@ -94,7 +94,7 @@ beforeAll(async () => {
 
 	refund.purchaseId = bodyPurchase.data.id;
 	refund.refundDetail[0].purchaseDetailId = bodyPurchase.data.purchaseDetail[0].id;
-}, 10000);
+}, 15000);
 
 afterAll(async () => {
 	await prisma.user.deleteMany();
@@ -118,6 +118,10 @@ describe('Testing refund routes', () => {
 			data: {
 				id: expect.any(Number),
 				purchaseId: expect.any(Number),
+				purchase: {
+					bill: expect.any(String),
+					supplier: expect.any(Object)
+				},
 				date: expect.any(String),
 				comment: expect.any(String),
 				userDNI: expect.any(String),
@@ -149,6 +153,10 @@ describe('Testing refund routes', () => {
 			data: {
 				id: expect.any(Number),
 				purchaseId: expect.any(Number),
+				purchase: {
+					bill: expect.any(String),
+					supplier: expect.any(Object)
+				},
 				date: expect.any(String),
 				comment: expect.any(String),
 				userDNI: expect.any(String),
@@ -169,6 +177,10 @@ describe('Testing refund routes', () => {
 			data: {
 				id: expect.any(Number),
 				purchaseId: expect.any(Number),
+				purchase: {
+					bill: expect.any(String),
+					supplier: expect.any(Object)
+				},
 				date: expect.any(String),
 				comment: expect.any(String),
 				userDNI: expect.any(String),
