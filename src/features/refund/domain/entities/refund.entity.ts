@@ -1,11 +1,17 @@
 import { CustomError, EIGHT, REGEX_DNI, ZERO } from '../../../../core';
 import { Decimal } from '../../../../data/postgresql';
+import { SupplierDetailPurchaseEntityProps as SupplierDetailPurchaseEntity } from '../../../purchase/domain/entities/purchase.entity';
 
 interface PurchaseDetailEntityProps {
 	id: number;
 	productId: number;
-	quantity: number;
 	unitPrice: Decimal;
+	quantity: number;
+}
+
+interface PurchaseRefundEntityProps {
+	bill: string;
+	supplier: SupplierDetailPurchaseEntity;
 }
 
 interface RefundDetailEntityProps {
@@ -19,6 +25,7 @@ interface RefundDetailEntityProps {
 interface RefundEntityProps {
 	id: number;
 	purchaseId: number;
+	purchase: PurchaseRefundEntityProps;
 	date: Date;
 	comment: string;
 	userDNI: string;
@@ -29,6 +36,7 @@ export class RefundEntity {
 	constructor(
 		public readonly id: number,
 		public readonly purchaseId: number,
+		public readonly purchase: PurchaseRefundEntityProps,
 		public readonly date: Date,
 		public readonly comment: string,
 		public readonly userDNI: string,
@@ -36,7 +44,7 @@ export class RefundEntity {
 	) {}
 
 	static fromObject(object: RefundEntityProps): RefundEntity {
-		const { id, purchaseId, date, comment, userDNI, refundDetail } = object;
+		const { id, purchaseId, purchase, date, comment, userDNI, refundDetail } = object;
 
 		if (!id)
 			throw CustomError.badRequest('This entity requires an id', [{ constraint: 'id is required', fields: ['id'] }]);
@@ -44,6 +52,11 @@ export class RefundEntity {
 		if (!purchaseId)
 			throw CustomError.badRequest('This entity requires a purchaseId', [
 				{ constraint: 'purchaseId is required', fields: ['purchaseId'] }
+			]);
+
+		if (!purchase)
+			throw CustomError.badRequest('This entity requires a purchase', [
+				{ constraint: 'purchase is required', fields: ['purchase'] }
 			]);
 
 		if (!date)
@@ -88,6 +101,6 @@ export class RefundEntity {
 				]);
 		});
 
-		return new RefundEntity(id, purchaseId, date, comment, userDNI, refundDetail);
+		return new RefundEntity(id, purchaseId, purchase, date, comment, userDNI, refundDetail);
 	}
 }
