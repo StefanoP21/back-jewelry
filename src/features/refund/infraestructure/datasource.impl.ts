@@ -233,15 +233,6 @@ export class RefundDatasourceImpl implements RefundDatasource {
 						}
 					}
 				});
-
-				await prisma.purchaseDetail.update({
-					where: { id: product.purchaseDetail.id },
-					data: {
-						quantity: {
-							increment: product.quantity
-						}
-					}
-				});
 			}
 
 			return RefundEntity.fromObject(refund);
