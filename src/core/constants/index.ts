@@ -16,6 +16,10 @@ export const REGEX_EMAIL = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
 
 export const REGEX_DNI = /^(?!0{3,})(?!(\d)\1{7})\d{8}$/;
 
+export const REGEX_PHONE = /^[0-9]{9}$/;
+
+export const REGEX_RUC = /^(10|15|16|17|20)\d{9}$/;
+
 export type Role = 'ADMIN' | 'USER';
 
 export enum HttpCode {
@@ -61,5 +65,11 @@ export enum ErrorMessages {
 	INTERNAL_SERVER_ERROR = 'Error interno del servidor',
 
 	//* CATEGORY
-	CATEGORY_NOT_FOUND = 'Categoría no encontrada'
+	CATEGORY_NOT_FOUND = 'Categoría no encontrada',
+
+	//* CUSTOMER
+	CUSTOMER_NOT_FOUND = 'Cliente no encontrado',
+
+	//* SUPPLIER
+	SUPPLIER_NOT_FOUND = 'Proveedor no encontrado'
 }
