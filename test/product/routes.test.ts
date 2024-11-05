@@ -38,7 +38,7 @@ beforeAll(async () => {
 		.send(category);
 
 	product.categoryId = bodyCategory.data.id;
-});
+}, 15000);
 
 afterAll(async () => {
 	await prisma.user.deleteMany();

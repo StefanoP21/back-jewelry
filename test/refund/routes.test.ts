@@ -94,7 +94,7 @@ beforeAll(async () => {
 
 	refund.purchaseId = bodyPurchase.data.id;
 	refund.refundDetail[0].purchaseDetailId = bodyPurchase.data.purchaseDetail[0].id;
-}, 15000);
+}, 25000);
 
 afterAll(async () => {
 	await prisma.user.deleteMany();

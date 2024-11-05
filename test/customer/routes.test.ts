@@ -3,8 +3,12 @@ import { testServer } from '../test-server';
 import { prisma } from '../../src/data/postgresql';
 import { ErrorMessages, ErrorType, HttpCode } from '../../src/core';
 
-let category = {
-	name: 'Categoria Prueba'
+let customer = {
+	name: 'Sebastian',
+	lastName: 'Simon',
+	email: 'sebas2@hotmail.com',
+	dni: '98765432',
+	phone: '334135669'
 };
 
 const user = {
@@ -23,49 +27,56 @@ beforeAll(async () => {
 
 	const { body } = await request(testServer.app).post('/api/auth/register').send(user).expect(HttpCode.CREATED);
 	token = body.data.token;
-}, 15000);
+});
 
 afterAll(async () => {
 	await prisma.user.deleteMany();
 	testServer.close();
 });
 
-describe('Testing category routes', () => {
-	it('should create a new category - api/category', async () => {
+describe('Testing customer routes', () => {
+	it('should create a new customer - api/customer', async () => {
 		const { body } = await request(testServer.app)
-			.post('/api/category')
+			.post('/api/customer')
 			.set('Authorization', `Bearer ${token}`)
-			.send(category)
+			.send(customer)
 			.expect(HttpCode.CREATED);
 
 		expect(body).toEqual({
 			data: {
 				id: expect.any(Number),
-				name: expect.any(String)
+				name: expect.any(String),
+				lastName: expect.any(String),
+				email: expect.any(String),
+				dni: expect.any(String),
+				phone: expect.any(String)
 			}
 		});
 	});
 
-	it('should update a category - api/category/:id', async () => {
-		const id = await prisma.category.findMany({ take: 1, orderBy: { id: 'desc' } }).then((res) => res[0].id);
-
+	it('should update a customer - api/customer/:id', async () => {
+		const id = await prisma.customer.findMany({ take: 1, orderBy: { id: 'desc' } }).then((res) => res[0].id);
 		const { body } = await request(testServer.app)
-			.put(`/api/category/${id}`)
+			.put(`/api/customer/${id}`)
 			.set('Authorization', `Bearer ${token}`)
-			.send(category)
+			.send(customer)
 			.expect(HttpCode.OK);
 
 		expect(body).toEqual({
 			data: {
 				id: expect.any(Number),
-				name: expect.any(String)
+				name: expect.any(String),
+				lastName: expect.any(String),
+				email: expect.any(String),
+				dni: expect.any(String),
+				phone: expect.any(String)
 			}
 		});
 	});
 
-	it('should get all categories - api/category', async () => {
+	it('should get all customers - api/customer', async () => {
 		const { body } = await request(testServer.app)
-			.get('/api/category')
+			.get('/api/customer')
 			.set('Authorization', `Bearer ${token}`)
 			.expect(HttpCode.OK);
 
@@ -74,43 +85,51 @@ describe('Testing category routes', () => {
 		});
 	});
 
-	it('should get category by id - api/category/:id', async () => {
-		const id = await prisma.category.findMany({ take: 1, orderBy: { id: 'desc' } }).then((res) => res[0].id);
+	it('should get a customer by id - api/customer/:id', async () => {
+		const id = await prisma.customer.findMany({ take: 1, orderBy: { id: 'desc' } }).then((res) => res[0].id);
 
 		const { body } = await request(testServer.app)
-			.get(`/api/category/${id}`)
+			.get(`/api/customer/${id}`)
 			.set('Authorization', `Bearer ${token}`)
 			.expect(HttpCode.OK);
 
 		expect(body).toEqual({
 			data: {
 				id: expect.any(Number),
-				name: expect.any(String)
+				name: expect.any(String),
+				lastName: expect.any(String),
+				email: expect.any(String),
+				dni: expect.any(String),
+				phone: expect.any(String)
 			}
 		});
 	});
 
-	it('should delete a category - api/category/:id', async () => {
-		const id = await prisma.category.findMany({ take: 1, orderBy: { id: 'desc' } }).then((res) => res[0].id);
+	it('should delete a customer - api/customer/:id', async () => {
+		const id = await prisma.customer.findMany({ take: 1, orderBy: { id: 'desc' } }).then((res) => res[0].id);
 
 		const { body } = await request(testServer.app)
-			.delete(`/api/category/${id}`)
+			.delete(`/api/customer/${id}`)
 			.set('Authorization', `Bearer ${token}`)
 			.expect(HttpCode.OK);
 
 		expect(body).toEqual({
 			data: {
 				id: expect.any(Number),
-				name: expect.any(String)
+				name: expect.any(String),
+				lastName: expect.any(String),
+				email: expect.any(String),
+				dni: expect.any(String),
+				phone: expect.any(String)
 			}
 		});
 	});
 });
 
-describe('Testing category routes - Error cases', () => {
-	it('should return error when trying to get categories with an invalid bearer token', async () => {
+describe('Testing customer routes - Error cases', () => {
+	it('should return error when trying to get customers with an invalid bearer token', async () => {
 		const { body } = await request(testServer.app)
-			.get('/api/category')
+			.get('/api/customer')
 			.set('Authorization', `123`)
 			.expect(HttpCode.UNAUTHORIZED);
 
@@ -121,17 +140,17 @@ describe('Testing category routes - Error cases', () => {
 		});
 	});
 
-	it('should return error when get category by id - api/category/:id', async () => {
+	it('should return error when get customer by id - api/customer/:id', async () => {
 		const id = 999999;
 
 		const { body } = await request(testServer.app)
-			.get(`/api/category/${id}`)
+			.get(`/api/customer/${id}`)
 			.set('Authorization', `Bearer ${token}`)
 			.expect(HttpCode.NOT_FOUND);
 
 		expect(body).toEqual({
 			name: ErrorType.NOT_FOUND,
-			message: ErrorMessages.CATEGORY_NOT_FOUND,
+			message: ErrorMessages.CUSTOMER_NOT_FOUND,
 			stack: expect.any(String)
 		});
 	});
