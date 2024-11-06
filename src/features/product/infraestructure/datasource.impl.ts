@@ -7,7 +7,10 @@ export class ProductDatasourceImpl implements ProductDatasource {
 
 	async getAll(): Promise<ProductEntity[]> {
 		try {
-			const products = await prisma.product.findMany({ include: { category: { select: { id: true, name: true } } } });
+			const products = await prisma.product.findMany({
+				include: { category: { select: { id: true, name: true } } },
+				orderBy: { name: 'asc' }
+			});
 
 			return products.map((product) => ProductEntity.fromObject(product));
 		} catch (error) {

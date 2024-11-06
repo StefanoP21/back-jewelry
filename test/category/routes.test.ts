@@ -23,7 +23,7 @@ beforeAll(async () => {
 
 	const { body } = await request(testServer.app).post('/api/auth/register').send(user).expect(HttpCode.CREATED);
 	token = body.data.token;
-});
+}, 15000);
 
 afterAll(async () => {
 	await prisma.user.deleteMany();

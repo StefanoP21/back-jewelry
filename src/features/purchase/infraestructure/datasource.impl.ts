@@ -1,4 +1,4 @@
-import { CustomError, ErrorMessages } from '../../../core';
+import { CustomError, ErrorMessages, IGV } from '../../../core';
 import { prisma } from '../../../data/postgresql';
 import { PurchaseEntity, type PurchaseDatasource, type PurchaseDto } from '../domain';
 
@@ -9,8 +9,29 @@ export class PurchaseDatasourceImpl implements PurchaseDatasource {
 		try {
 			const purchases = await prisma.purchase.findMany({
 				include: {
-					purchaseDetail: true
-				}
+					supplier: {
+						select: {
+							id: true,
+							nameContact: true,
+							companyName: true,
+							email: true,
+							phone: true,
+							ruc: true
+						}
+					},
+					purchaseDetail: {
+						include: {
+							product: {
+								select: {
+									id: true,
+									name: true,
+									image: true
+								}
+							}
+						}
+					}
+				},
+				orderBy: { createdAt: 'desc' }
 			});
 
 			return purchases.map((purchase) => PurchaseEntity.fromObject(purchase));
@@ -22,7 +43,10 @@ export class PurchaseDatasourceImpl implements PurchaseDatasource {
 
 	async getById(id: number): Promise<PurchaseEntity> {
 		try {
-			const purchase = await prisma.purchase.findUnique({ where: { id }, include: { purchaseDetail: true } });
+			const purchase = await prisma.purchase.findUnique({
+				where: { id },
+				include: { supplier: true, purchaseDetail: true }
+			});
 
 			if (!purchase) throw CustomError.notFound(ErrorMessages.PURCHASE_NOT_FOUND);
 
@@ -39,11 +63,14 @@ export class PurchaseDatasourceImpl implements PurchaseDatasource {
 				data: {
 					supplierId: dto.supplierId,
 					total: dto.total,
+					bill: dto.bill,
+					userDNI: dto.userDNI,
 					purchaseDetail: {
 						create: dto.purchaseDetail
 					}
 				},
 				include: {
+					supplier: true,
 					purchaseDetail: true
 				}
 			});
@@ -54,6 +81,9 @@ export class PurchaseDatasourceImpl implements PurchaseDatasource {
 					data: {
 						stock: {
 							increment: product.quantity
+						},
+						price: {
+							set: parseFloat(product.unitPrice.toString()) * (1 + parseFloat(product.profit.toString())) * IGV
 						}
 					}
 				});
@@ -72,7 +102,7 @@ export class PurchaseDatasourceImpl implements PurchaseDatasource {
 
 			const deletedPurchase = await prisma.purchase.delete({
 				where: { id: purchaseId },
-				include: { purchaseDetail: true }
+				include: { supplier: true, purchaseDetail: true }
 			});
 
 			for (const product of deletedPurchase.purchaseDetail) {
@@ -80,7 +110,7 @@ export class PurchaseDatasourceImpl implements PurchaseDatasource {
 					where: { id: product.productId },
 					data: {
 						stock: {
-							increment: -product.quantity
+							decrement: product.quantity
 						}
 					}
 				});

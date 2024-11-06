@@ -6,11 +6,14 @@ import { ErrorMessages, ErrorType, HttpCode } from '../../src/core';
 let purchase = {
 	supplierId: 1,
 	total: 150.5,
+	bill: 'Factura de Prueba',
+	userDNI: '77229991',
 	purchaseDetail: [
 		{
 			productId: 1,
 			quantity: 20,
-			unitPrice: 15.5
+			unitPrice: 15.5,
+			profit: 0.2
 		}
 	]
 };
@@ -24,15 +27,14 @@ let product = {
 	description: 'Este es un proyecto de prueba',
 	categoryId: 1,
 	image: 'imagen/ruta',
-	material: 'Material XD',
-	price: 25.9
+	material: 'Material XD'
 };
 
 let supplier = {
 	nameContact: 'Supplier de Prueba',
 	email: 'example@email.com',
 	phone: '123456789',
-	razonSocial: 'Prueba SAC',
+	companyName: 'Prueba SAC',
 	ruc: '12345678910'
 };
 
@@ -71,7 +73,7 @@ beforeAll(async () => {
 
 	purchase.supplierId = supplierID.id;
 	purchase.purchaseDetail[0].productId = bodyProduct.data.id;
-}, 10000);
+}, 15000);
 
 afterAll(async () => {
 	await prisma.user.deleteMany();
@@ -94,8 +96,11 @@ describe('Testing purchase routes', () => {
 			data: {
 				id: expect.any(Number),
 				supplierId: expect.any(Number),
+				supplier: expect.any(Object),
 				date: expect.any(String),
 				total: expect.any(String),
+				bill: expect.any(String),
+				userDNI: expect.any(String),
 				purchaseDetail: expect.any(Array)
 			}
 		});
@@ -124,8 +129,11 @@ describe('Testing purchase routes', () => {
 			data: {
 				id: expect.any(Number),
 				supplierId: expect.any(Number),
+				supplier: expect.any(Object),
 				date: expect.any(String),
 				total: expect.any(String),
+				bill: expect.any(String),
+				userDNI: expect.any(String),
 				purchaseDetail: expect.any(Array)
 			}
 		});
@@ -143,8 +151,11 @@ describe('Testing purchase routes', () => {
 			data: {
 				id: expect.any(Number),
 				supplierId: expect.any(Number),
+				supplier: expect.any(Object),
 				date: expect.any(String),
 				total: expect.any(String),
+				bill: expect.any(String),
+				userDNI: expect.any(String),
 				purchaseDetail: expect.any(Array)
 			}
 		});
