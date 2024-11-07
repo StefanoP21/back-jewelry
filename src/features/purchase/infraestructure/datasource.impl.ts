@@ -45,7 +45,29 @@ export class PurchaseDatasourceImpl implements PurchaseDatasource {
 		try {
 			const purchase = await prisma.purchase.findUnique({
 				where: { id },
-				include: { supplier: true, purchaseDetail: true }
+				include: {
+					supplier: {
+						select: {
+							id: true,
+							nameContact: true,
+							companyName: true,
+							email: true,
+							phone: true,
+							ruc: true
+						}
+					},
+					purchaseDetail: {
+						include: {
+							product: {
+								select: {
+									id: true,
+									name: true,
+									image: true
+								}
+							}
+						}
+					}
+				}
 			});
 
 			if (!purchase) throw CustomError.notFound(ErrorMessages.PURCHASE_NOT_FOUND);
@@ -70,8 +92,27 @@ export class PurchaseDatasourceImpl implements PurchaseDatasource {
 					}
 				},
 				include: {
-					supplier: true,
-					purchaseDetail: true
+					supplier: {
+						select: {
+							id: true,
+							nameContact: true,
+							companyName: true,
+							email: true,
+							phone: true,
+							ruc: true
+						}
+					},
+					purchaseDetail: {
+						include: {
+							product: {
+								select: {
+									id: true,
+									name: true,
+									image: true
+								}
+							}
+						}
+					}
 				}
 			});
 
@@ -102,7 +143,29 @@ export class PurchaseDatasourceImpl implements PurchaseDatasource {
 
 			const deletedPurchase = await prisma.purchase.delete({
 				where: { id: purchaseId },
-				include: { supplier: true, purchaseDetail: true }
+				include: {
+					supplier: {
+						select: {
+							id: true,
+							nameContact: true,
+							companyName: true,
+							email: true,
+							phone: true,
+							ruc: true
+						}
+					},
+					purchaseDetail: {
+						include: {
+							product: {
+								select: {
+									id: true,
+									name: true,
+									image: true
+								}
+							}
+						}
+					}
+				}
 			});
 
 			for (const product of deletedPurchase.purchaseDetail) {
