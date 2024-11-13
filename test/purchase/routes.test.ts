@@ -31,11 +31,11 @@ let product = {
 };
 
 let supplier = {
-	nameContact: 'Supplier de Prueba',
-	email: 'example@email.com',
-	phone: '123456789',
-	companyName: 'Prueba SAC',
-	ruc: '12345678910'
+	nameContact: 'example',
+	email: 'example@hotmail.com',
+	phone: '223436729',
+	companyName: 'Example Company',
+	ruc: '20345678921'
 };
 
 const user = {
@@ -69,9 +69,13 @@ beforeAll(async () => {
 		.set('Authorization', `Bearer ${token}`)
 		.send(product);
 
-	const supplierID = await prisma.supplier.create({ data: supplier });
+	//* Crear proveedor
+	const { body: bodySupplier } = await request(testServer.app)
+		.post('/api/supplier')
+		.set('Authorization', `Bearer ${token}`)
+		.send(supplier);
 
-	purchase.supplierId = supplierID.id;
+	purchase.supplierId = bodySupplier.data.id;
 	purchase.purchaseDetail[0].productId = bodyProduct.data.id;
 }, 15000);
 

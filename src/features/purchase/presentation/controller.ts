@@ -41,7 +41,7 @@ export class PurchaseController {
 			.catch(next);
 	};
 
-	public getById = (req: Request, res: Response<SuccessResponse<PurchaseEntity>>, next: NextFunction) => {
+	public getById = (req: Request<Params>, res: Response<SuccessResponse<PurchaseEntity>>, next: NextFunction) => {
 		const { id } = req.params;
 
 		new GetPurchaseById(this.repository)

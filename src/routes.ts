@@ -8,6 +8,7 @@ import { AuthDatasourceImpl, AuthRepositoryImpl } from './features/auth/infraest
 import { BcryptAdapter } from './core';
 import { CustomerRoutes } from './features/customer';
 import { SupplierRoutes } from './features/supplier';
+import { OrderRoutes } from './features/order';
 
 export class AppRoutes {
 	static get routes(): Router {
@@ -24,6 +25,7 @@ export class AppRoutes {
 		router.use('/refund', [authMiddleware.validateJWT], RefundRoutes.routes);
 		router.use('/customer', [authMiddleware.validateJWT], CustomerRoutes.routes);
 		router.use('/supplier', [authMiddleware.validateJWT], SupplierRoutes.routes);
+		router.use('/order', [authMiddleware.validateJWT], OrderRoutes.routes);
 
 		return router;
 	}
