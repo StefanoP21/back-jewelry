@@ -3,14 +3,17 @@ import { testServer } from '../test-server';
 import { prisma } from '../../src/data/postgresql';
 import { ErrorMessages, ErrorType, HttpCode } from '../../src/core';
 
-let refund = {
-	purchaseId: 1,
-	comment: 'Este es un comentario de prueba',
-	userDNI: '77229991',
-	refundDetail: [
+let order = {
+	customerId: 1,
+	userId: 1,
+	paymentMethod: 'CASH',
+	total: 150.5,
+	totalDesc: 10,
+	orderDetail: [
 		{
-			purchaseDetailId: 1,
-			quantity: 2
+			productId: 1,
+			quantity: 1,
+			unitPrice: 100
 		}
 	]
 };
@@ -30,6 +33,22 @@ let purchase = {
 	]
 };
 
+let supplier = {
+	nameContact: 'example',
+	email: 'example@hotmail.com',
+	phone: '223436729',
+	companyName: 'Example Company',
+	ruc: '20345678921'
+};
+
+let customer = {
+	name: 'Sebastian',
+	lastName: 'Simon',
+	email: 'sebas2@hotmail.com',
+	dni: '98765432',
+	phone: '334135669'
+};
+
 const category = {
 	name: 'Categoria de Prueba'
 };
@@ -40,14 +59,6 @@ let product = {
 	categoryId: 1,
 	image: 'imagen/ruta',
 	material: 'Material XD'
-};
-
-let supplier = {
-	nameContact: 'example',
-	email: 'example@hotmail.com',
-	phone: '223436729',
-	companyName: 'Example Company',
-	ruc: '20345678921'
 };
 
 const user = {
@@ -96,8 +107,15 @@ beforeAll(async () => {
 		.set('Authorization', `Bearer ${token}`)
 		.send(purchase);
 
-	refund.purchaseId = bodyPurchase.data.id;
-	refund.refundDetail[0].purchaseDetailId = bodyPurchase.data.purchaseDetail[0].id;
+	//* Crear cliente
+	const { body: bodyCustomer } = await request(testServer.app)
+		.post('/api/customer')
+		.set('Authorization', `Bearer ${token}`)
+		.send(customer);
+
+	order.customerId = bodyCustomer.data.id;
+	order.userId = body.data.user.id;
+	order.orderDetail[0].productId = bodyProduct.data.id;
 }, 25000);
 
 afterAll(async () => {
@@ -106,37 +124,37 @@ afterAll(async () => {
 	await prisma.supplier.deleteMany();
 	await prisma.product.deleteMany();
 	await prisma.category.deleteMany();
+	await prisma.customer.deleteMany();
 
 	testServer.close();
 });
 
-describe('Testing refund routes', () => {
-	it('should create a refund - api/refund', async () => {
+describe('Testing order routes', () => {
+	it('should create an order - api/order', async () => {
 		const { body } = await request(testServer.app)
-			.post('/api/refund')
+			.post('/api/order')
 			.set('Authorization', `Bearer ${token}`)
-			.send(refund)
+			.send(order)
 			.expect(HttpCode.CREATED);
 
 		expect(body).toEqual({
 			data: {
 				id: expect.any(Number),
-				purchaseId: expect.any(Number),
-				purchase: {
-					bill: expect.any(String),
-					supplier: expect.any(Object)
-				},
+				customerId: expect.any(Number),
+				customer: expect.any(Object),
+				userId: expect.any(Number),
 				date: expect.any(String),
-				comment: expect.any(String),
-				userDNI: expect.any(String),
-				refundDetail: expect.any(Array)
+				paymentMethod: expect.any(String),
+				total: expect.any(String),
+				totalDesc: expect.any(String),
+				orderDetail: expect.any(Array)
 			}
 		});
 	});
 
-	it('should get all refunds - api/refund', async () => {
+	it('should get all orders - api/order', async () => {
 		const { body } = await request(testServer.app)
-			.get('/api/refund')
+			.get('/api/order')
 			.set('Authorization', `Bearer ${token}`)
 			.expect(HttpCode.OK);
 
@@ -145,50 +163,48 @@ describe('Testing refund routes', () => {
 		});
 	});
 
-	it('should get a refund by id - api/refund/:id', async () => {
-		const id = await prisma.refund.findMany({ take: 1, orderBy: { id: 'desc' } }).then((res) => res[0].id);
+	it('should get an order by id - api/order/:id', async () => {
+		const id = await prisma.order.findMany({ take: 1, orderBy: { id: 'desc' } }).then((res) => res[0].id);
 
 		const { body } = await request(testServer.app)
-			.get(`/api/refund/${id}`)
+			.get(`/api/order/${id}`)
 			.set('Authorization', `Bearer ${token}`)
 			.expect(HttpCode.OK);
 
 		expect(body).toEqual({
 			data: {
 				id: expect.any(Number),
-				purchaseId: expect.any(Number),
-				purchase: {
-					bill: expect.any(String),
-					supplier: expect.any(Object)
-				},
+				customerId: expect.any(Number),
+				customer: expect.any(Object),
+				userId: expect.any(Number),
 				date: expect.any(String),
-				comment: expect.any(String),
-				userDNI: expect.any(String),
-				refundDetail: expect.any(Array)
+				paymentMethod: expect.any(String),
+				total: expect.any(String),
+				totalDesc: expect.any(String),
+				orderDetail: expect.any(Array)
 			}
 		});
 	});
 
-	it('should delete a refund - api/refund/:id', async () => {
-		const id = await prisma.refund.findMany({ take: 1, orderBy: { id: 'desc' } }).then((res) => res[0].id);
+	it('should delete an order - api/order/:id', async () => {
+		const id = await prisma.order.findMany({ take: 1, orderBy: { id: 'desc' } }).then((res) => res[0].id);
 
 		const { body } = await request(testServer.app)
-			.delete(`/api/refund/${id}`)
+			.delete(`/api/order/${id}`)
 			.set('Authorization', `Bearer ${token}`)
 			.expect(HttpCode.OK);
 
 		expect(body).toEqual({
 			data: {
 				id: expect.any(Number),
-				purchaseId: expect.any(Number),
-				purchase: {
-					bill: expect.any(String),
-					supplier: expect.any(Object)
-				},
+				customerId: expect.any(Number),
+				customer: expect.any(Object),
+				userId: expect.any(Number),
 				date: expect.any(String),
-				comment: expect.any(String),
-				userDNI: expect.any(String),
-				refundDetail: expect.any(Array)
+				paymentMethod: expect.any(String),
+				total: expect.any(String),
+				totalDesc: expect.any(String),
+				orderDetail: expect.any(Array)
 			}
 		});
 	});
@@ -197,7 +213,7 @@ describe('Testing refund routes', () => {
 describe('Testing refund routes - Error cases', () => {
 	it('should return error when trying to get refunds with an invalid bearer token', async () => {
 		const { body } = await request(testServer.app)
-			.get('/api/refund')
+			.get('/api/order')
 			.set('Authorization', `123`)
 			.expect(HttpCode.UNAUTHORIZED);
 
@@ -208,17 +224,17 @@ describe('Testing refund routes - Error cases', () => {
 		});
 	});
 
-	it('should return error when get refund by id - api/refund/:id', async () => {
+	it('should return error when get order by id - api/order/:id', async () => {
 		const id = 999999;
 
 		const { body } = await request(testServer.app)
-			.get(`/api/refund/${id}`)
+			.get(`/api/order/${id}`)
 			.set('Authorization', `Bearer ${token}`)
 			.expect(HttpCode.NOT_FOUND);
 
 		expect(body).toEqual({
 			name: ErrorType.NOT_FOUND,
-			message: ErrorMessages.REFUND_NOT_FOUND,
+			message: ErrorMessages.ORDER_NOT_FOUND,
 			stack: expect.any(String)
 		});
 	});

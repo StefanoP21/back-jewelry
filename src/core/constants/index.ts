@@ -22,6 +22,8 @@ export const REGEX_RUC = /^(10|15|16|17|20)\d{9}$/;
 
 export type Role = 'ADMIN' | 'USER';
 
+export type PaymentMethod = 'CASH' | 'CARD' | 'YAPE' | 'PLIN' | 'TRANSFER';
+
 export enum HttpCode {
 	OK = 200,
 	CREATED = 201,
@@ -55,6 +57,9 @@ export enum ErrorMessages {
 
 	//* REFUND
 	REFUND_NOT_FOUND = 'Devolución no encontrada',
+
+	//* ORDER
+	ORDER_NOT_FOUND = 'Venta no encontrada',
 
 	//* TOKEN
 	TOKEN_NOT_FOUND = 'No hay un token en la petición',
