@@ -61,7 +61,7 @@ export class OrderEntity {
 				{ constraint: 'paymentMethod is required', fields: ['paymentMethod'] }
 			]);
 
-		if (!totalDesc || parseFloat(totalDesc.toString()) < ZERO)
+		if (totalDesc == undefined || parseFloat(totalDesc.toString()) < ZERO)
 			throw CustomError.badRequest('This entity requires a totalDesc', [
 				{ constraint: 'totalDesc is required', fields: ['totalDesc'] }
 			]);
