@@ -134,7 +134,6 @@ model PurchaseDetail {
   productId  Int
   quantity   Int
   unitPrice  Decimal
-  profit     Decimal
 
   purchase     Purchase       @relation(fields: [purchaseId], references: [id], onDelete: Cascade)
   product      Product        @relation(fields: [productId], references: [id])

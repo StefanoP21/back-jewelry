@@ -12,8 +12,7 @@ let purchase = {
 		{
 			productId: 1,
 			quantity: 20,
-			unitPrice: 15.5,
-			profit: 0.2
+			unitPrice: 15.5
 		}
 	]
 };

@@ -1,4 +1,4 @@
-import { CustomError, ErrorMessages, IGV } from '../../../core';
+import { CustomError, ErrorMessages } from '../../../core';
 import { prisma } from '../../../data/postgresql';
 import { PurchaseEntity, type PurchaseDatasource, type PurchaseDto } from '../domain';
 
@@ -122,9 +122,6 @@ export class PurchaseDatasourceImpl implements PurchaseDatasource {
 					data: {
 						stock: {
 							increment: product.quantity
-						},
-						price: {
-							set: parseFloat(product.unitPrice.toString()) * (1 + parseFloat(product.profit.toString())) * IGV
 						}
 					}
 				});

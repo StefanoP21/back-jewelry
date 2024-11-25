@@ -20,7 +20,6 @@ interface PurchaseDetailRequestBody {
 	productId: number;
 	quantity: number;
 	unitPrice: Decimal;
-	profit: Decimal;
 }
 
 interface RequestBody {

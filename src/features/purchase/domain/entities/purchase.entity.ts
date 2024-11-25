@@ -7,7 +7,6 @@ interface PurchaseDetailEntityProps {
 	productId: number;
 	quantity: number;
 	unitPrice: Decimal;
-	profit: Decimal;
 }
 
 export interface SupplierDetailPurchaseEntityProps {
@@ -97,11 +96,6 @@ export class PurchaseEntity {
 			if (!product.unitPrice || parseFloat(product.unitPrice.toString()) <= ZERO)
 				throw CustomError.badRequest('purchaseDetail entities requires a unitPrice', [
 					{ constraint: 'product.unitPrice is required', fields: ['product.unitPrice'] }
-				]);
-
-			if (!product.profit || parseFloat(product.profit.toString()) <= ZERO)
-				throw CustomError.badRequest('purchaseDetail entities requires a profit', [
-					{ constraint: 'product.profit is required', fields: ['product.profit'] }
 				]);
 
 			if (!product.id)
