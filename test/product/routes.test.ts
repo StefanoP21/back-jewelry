@@ -8,18 +8,22 @@ let product = {
 	description: 'Este es un proyecto de prueba',
 	categoryId: 1,
 	image: 'imagen/ruta',
-	material: 'Material XD'
+	materialId: 1
 };
 
 const category = {
 	name: 'Categoria de Prueba'
 };
 
+let material = {
+	name: 'Material de Prueba'
+};
+
 const user = {
 	name: 'Oscar Antonio',
 	lastname: 'Medina Reyes',
-	dni: '77229991',
-	email: 'omedina.reyes@gmail.com',
+	dni: '12345678',
+	email: 'oscar@hotmail.com',
 	password: '123456',
 	role: 'ADMIN'
 };
@@ -32,6 +36,14 @@ beforeAll(async () => {
 	const { body } = await request(testServer.app).post('/api/auth/register').send(user);
 	token = body.data.token;
 
+	//* Crear material
+	const { body: bodyMaterial } = await request(testServer.app)
+		.post('/api/material')
+		.set('Authorization', `Bearer ${token}`)
+		.send(material);
+
+	product.materialId = bodyMaterial.data.id;
+
 	const { body: bodyCategory } = await request(testServer.app)
 		.post('/api/category')
 		.set('Authorization', `Bearer ${token}`)
@@ -42,6 +54,7 @@ beforeAll(async () => {
 
 afterAll(async () => {
 	await prisma.user.deleteMany();
+	await prisma.material.deleteMany();
 	await prisma.category.deleteMany();
 	testServer.close();
 });
@@ -61,7 +74,7 @@ describe('Testing product routes', () => {
 				description: expect.any(String),
 				category: expect.any(Object),
 				image: expect.any(String),
-				material: expect.any(String),
+				material: expect.any(Object),
 				price: expect.any(String),
 				stock: expect.any(Number)
 			}
@@ -84,7 +97,7 @@ describe('Testing product routes', () => {
 				description: expect.any(String),
 				category: expect.any(Object),
 				image: expect.any(String),
-				material: expect.any(String),
+				material: expect.any(Object),
 				price: expect.any(String),
 				stock: expect.any(Number)
 			}
@@ -117,7 +130,7 @@ describe('Testing product routes', () => {
 				description: expect.any(String),
 				category: expect.any(Object),
 				image: expect.any(String),
-				material: expect.any(String),
+				material: expect.any(Object),
 				price: expect.any(String),
 				stock: expect.any(Number)
 			}

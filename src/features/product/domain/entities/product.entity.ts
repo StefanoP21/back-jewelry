@@ -1,5 +1,6 @@
 import { CustomError, ZERO } from '../../../../core';
 import { Decimal } from '../../../../data/postgresql';
+import { MaterialEntity } from '../../../material/domain';
 
 interface CategoryEntityProps {
 	id: number;
@@ -12,7 +13,7 @@ interface ProductEntityProps {
 	description: string;
 	category: CategoryEntityProps;
 	image: string;
-	material: string;
+	material: MaterialEntity;
 	price: Decimal;
 	stock: number;
 }
@@ -24,7 +25,7 @@ export class ProductEntity {
 		public readonly description: string,
 		public readonly category: CategoryEntityProps,
 		public readonly image: string,
-		public readonly material: string,
+		public readonly material: MaterialEntity,
 		public readonly price: Decimal,
 		public readonly stock: number
 	) {}
@@ -67,10 +68,22 @@ export class ProductEntity {
 				{ constraint: 'image is required', fields: ['image'] }
 			]);
 
-		if (!material || material.length === ZERO)
+		if (!material)
 			throw CustomError.badRequest('This entity requires a material', [
 				{ constraint: 'material is required', fields: ['material'] }
 			]);
+
+		if (!material.id) {
+			throw CustomError.badRequest('This entity requires a material id', [
+				{ constraint: 'material id is required', fields: ['material.id'] }
+			]);
+		}
+
+		if (!material.name || material.name.length === ZERO) {
+			throw CustomError.badRequest('This entity requires a material name', [
+				{ constraint: 'material name is required', fields: ['material.name'] }
+			]);
+		}
 
 		if (price === undefined || price.toNumber() < ZERO)
 			throw CustomError.badRequest('This entity requires a price', [

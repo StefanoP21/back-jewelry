@@ -8,7 +8,7 @@ interface UpdateProductDtoProps {
 	description?: string;
 	categoryId?: number;
 	image?: string;
-	material?: string;
+	materialId?: number;
 	price?: Decimal;
 }
 
@@ -19,7 +19,7 @@ export class UpdateProductDto implements CoreDto<UpdateProductDto> {
 		public readonly description?: string,
 		public readonly categoryId?: number,
 		public readonly image?: string,
-		public readonly material?: string,
+		public readonly materialId?: number,
 		public readonly price?: Decimal
 	) {
 		this.validate(this);
@@ -39,8 +39,8 @@ export class UpdateProductDto implements CoreDto<UpdateProductDto> {
 	}
 
 	static create(object: UpdateProductDtoProps): UpdateProductDto {
-		const { id, name, description, categoryId, image, material, price } = object;
+		const { id, name, description, categoryId, image, materialId, price } = object;
 
-		return new UpdateProductDto(id, name, description, categoryId, image, material, price);
+		return new UpdateProductDto(id, name, description, categoryId, image, materialId, price);
 	}
 }

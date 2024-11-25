@@ -21,12 +21,16 @@ const category = {
 	name: 'Categoria de Prueba'
 };
 
+let material = {
+	name: 'Material de Prueba'
+};
+
 let product = {
 	name: 'Producto de Prueba',
 	description: 'Este es un proyecto de prueba',
 	categoryId: 1,
 	image: 'imagen/ruta',
-	material: 'Material XD'
+	materialId: 1
 };
 
 let supplier = {
@@ -40,8 +44,8 @@ let supplier = {
 const user = {
 	name: 'Oscar Antonio',
 	lastname: 'Medina Reyes',
-	dni: '77229991',
-	email: 'omedina.reyes@gmail.com',
+	dni: '12345678',
+	email: 'oscar@hotmail.com',
 	password: '123456',
 	role: 'ADMIN'
 };
@@ -53,6 +57,14 @@ beforeAll(async () => {
 
 	const { body } = await request(testServer.app).post('/api/auth/register').send(user);
 	token = body.data.token;
+
+	//* Crear material
+	const { body: bodyMaterial } = await request(testServer.app)
+		.post('/api/material')
+		.set('Authorization', `Bearer ${token}`)
+		.send(material);
+
+	product.materialId = bodyMaterial.data.id;
 
 	//* Crear categoría
 	const { body: bodyCategory } = await request(testServer.app)
@@ -82,6 +94,7 @@ afterAll(async () => {
 	await prisma.user.deleteMany();
 	await prisma.supplier.deleteMany();
 	await prisma.product.deleteMany();
+	await prisma.material.deleteMany();
 	await prisma.category.deleteMany();
 
 	testServer.close();

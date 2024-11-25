@@ -72,6 +72,9 @@ export enum ErrorMessages {
 	//* CATEGORY
 	CATEGORY_NOT_FOUND = 'Categoría no encontrada',
 
+	//* MATERIAL
+	MATERIAL_NOT_FOUND = 'Material no encontrado',
+
 	//* CUSTOMER
 	CUSTOMER_NOT_FOUND = 'Cliente no encontrado',
 
