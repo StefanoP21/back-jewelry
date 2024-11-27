@@ -69,19 +69,29 @@ model Category {
   product Product[]
 }
 
+model Material {
+  id        Int       @id @default(autoincrement())
+  name      String
+  createdAt DateTime  @default(now())
+  updatedAt DateTime? @updatedAt
+
+  product Product[]
+}
+
 model Product {
   id          Int       @id @default(autoincrement())
   name        String
   description String
   categoryId  Int
+  materialId  Int
   image       String
-  material    String
   price       Decimal   @default(0)
   stock       Int       @default(0)
   createdAt   DateTime  @default(now())
   updatedAt   DateTime? @updatedAt
 
   category       Category         @relation(fields: [categoryId], references: [id])
+  material       Material         @relation(fields: [materialId], references: [id])
   orderDetail    OrderDetail[]
   purchaseDetail PurchaseDetail[]
 }
@@ -124,7 +134,7 @@ model OrderDetail {
   quantity  Int
   unitPrice Decimal
 
-  order   Order   @relation(fields: [orderId], references: [id])
+  order   Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
   product Product @relation(fields: [productId], references: [id])
 }
 
@@ -134,7 +144,6 @@ model PurchaseDetail {
   productId  Int
   quantity   Int
   unitPrice  Decimal
-  profit     Decimal
 
   purchase     Purchase       @relation(fields: [purchaseId], references: [id], onDelete: Cascade)
   product      Product        @relation(fields: [productId], references: [id])

@@ -22,7 +22,7 @@ interface RequestBody {
 	description: string;
 	categoryId: number;
 	image: string;
-	material: string;
+	materialId: number;
 	price: Decimal;
 }
 
@@ -50,14 +50,14 @@ export class ProductController {
 		res: Response<SuccessResponse<ProductEntity>>,
 		next: NextFunction
 	) => {
-		const { name, description, categoryId, image, material } = req.body;
+		const { name, description, categoryId, image, materialId } = req.body;
 
 		const createProductDto = CreateProductDto.create({
 			name,
 			description,
 			categoryId,
 			image,
-			material
+			materialId
 		});
 
 		new CreateProduct(this.repository)
@@ -72,7 +72,7 @@ export class ProductController {
 		next: NextFunction
 	) => {
 		const { id } = req.params;
-		const { name, description, categoryId, image, material, price } = req.body;
+		const { name, description, categoryId, image, materialId, price } = req.body;
 
 		const updateProductDto = UpdateProductDto.create({
 			id: Number(id),
@@ -80,7 +80,7 @@ export class ProductController {
 			description,
 			categoryId,
 			image,
-			material,
+			materialId,
 			price
 		});
 

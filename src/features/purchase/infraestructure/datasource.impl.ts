@@ -1,4 +1,4 @@
-import { CustomError, ErrorMessages, IGV } from '../../../core';
+import { CustomError, ErrorMessages } from '../../../core';
 import { prisma } from '../../../data/postgresql';
 import { PurchaseEntity, type PurchaseDatasource, type PurchaseDto } from '../domain';
 
@@ -45,7 +45,29 @@ export class PurchaseDatasourceImpl implements PurchaseDatasource {
 		try {
 			const purchase = await prisma.purchase.findUnique({
 				where: { id },
-				include: { supplier: true, purchaseDetail: true }
+				include: {
+					supplier: {
+						select: {
+							id: true,
+							nameContact: true,
+							companyName: true,
+							email: true,
+							phone: true,
+							ruc: true
+						}
+					},
+					purchaseDetail: {
+						include: {
+							product: {
+								select: {
+									id: true,
+									name: true,
+									image: true
+								}
+							}
+						}
+					}
+				}
 			});
 
 			if (!purchase) throw CustomError.notFound(ErrorMessages.PURCHASE_NOT_FOUND);
@@ -70,8 +92,27 @@ export class PurchaseDatasourceImpl implements PurchaseDatasource {
 					}
 				},
 				include: {
-					supplier: true,
-					purchaseDetail: true
+					supplier: {
+						select: {
+							id: true,
+							nameContact: true,
+							companyName: true,
+							email: true,
+							phone: true,
+							ruc: true
+						}
+					},
+					purchaseDetail: {
+						include: {
+							product: {
+								select: {
+									id: true,
+									name: true,
+									image: true
+								}
+							}
+						}
+					}
 				}
 			});
 
@@ -81,9 +122,6 @@ export class PurchaseDatasourceImpl implements PurchaseDatasource {
 					data: {
 						stock: {
 							increment: product.quantity
-						},
-						price: {
-							set: parseFloat(product.unitPrice.toString()) * (1 + parseFloat(product.profit.toString())) * IGV
 						}
 					}
 				});
@@ -102,7 +140,29 @@ export class PurchaseDatasourceImpl implements PurchaseDatasource {
 
 			const deletedPurchase = await prisma.purchase.delete({
 				where: { id: purchaseId },
-				include: { supplier: true, purchaseDetail: true }
+				include: {
+					supplier: {
+						select: {
+							id: true,
+							nameContact: true,
+							companyName: true,
+							email: true,
+							phone: true,
+							ruc: true
+						}
+					},
+					purchaseDetail: {
+						include: {
+							product: {
+								select: {
+									id: true,
+									name: true,
+									image: true
+								}
+							}
+						}
+					}
+				}
 			});
 
 			for (const product of deletedPurchase.purchaseDetail) {

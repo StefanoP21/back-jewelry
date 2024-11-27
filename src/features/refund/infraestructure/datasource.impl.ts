@@ -1,4 +1,4 @@
-import { CustomError, ErrorMessages } from '../../../core';
+import { CustomError, ErrorMessages, ZERO } from '../../../core';
 import { prisma } from '../../../data/postgresql';
 import { RefundEntity, type RefundDatasource, type RefundDto } from '../domain';
 
@@ -55,7 +55,7 @@ export class RefundDatasourceImpl implements RefundDatasource {
 			});
 
 			for (const product of refunds.refundDetail) {
-				await prisma.product.update({
+				const updatedProduct = await prisma.product.update({
 					where: { id: product.purchaseDetail.productId },
 					data: {
 						stock: {
@@ -64,14 +64,16 @@ export class RefundDatasourceImpl implements RefundDatasource {
 					}
 				});
 
-				await prisma.purchaseDetail.update({
-					where: { id: product.purchaseDetail.id },
-					data: {
-						quantity: {
-							decrement: product.quantity
+				if (updatedProduct.stock == ZERO) {
+					await prisma.product.update({
+						where: { id: updatedProduct.id },
+						data: {
+							price: {
+								set: 0
+							}
 						}
-					}
-				});
+					});
+				}
 			}
 
 			return RefundEntity.fromObject(refunds);

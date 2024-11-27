@@ -6,7 +6,6 @@ interface PurchaseDetailDtoProps {
 	productId: number;
 	quantity: number;
 	unitPrice: Decimal;
-	profit: Decimal;
 }
 
 interface PurchaseDtoProps {
@@ -79,12 +78,6 @@ export class PurchaseDto implements CoreDto<PurchaseDto> {
 				errors.push({
 					constraint: 'El precio unitario es obligatorio',
 					fields: ['product.unitPrice']
-				});
-
-			if (!product.profit || parseFloat(product.profit.toString()) < ZERO)
-				errors.push({
-					constraint: 'El margen de ganancia es obligatorio',
-					fields: ['product.profit']
 				});
 		});
 

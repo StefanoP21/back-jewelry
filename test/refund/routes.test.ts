@@ -24,10 +24,13 @@ let purchase = {
 		{
 			productId: 1,
 			quantity: 20,
-			unitPrice: 15.5,
-			profit: 0.2
+			unitPrice: 15.5
 		}
 	]
+};
+
+let material = {
+	name: 'Material de Prueba'
 };
 
 const category = {
@@ -39,22 +42,22 @@ let product = {
 	description: 'Este es un proyecto de prueba',
 	categoryId: 1,
 	image: 'imagen/ruta',
-	material: 'Material XD'
+	materialId: 1
 };
 
 let supplier = {
-	nameContact: 'Supplier de Prueba',
-	email: 'example@email.com',
-	phone: '123456789',
-	companyName: 'Prueba SAC',
-	ruc: '12345678910'
+	nameContact: 'example',
+	email: 'example@hotmail.com',
+	phone: '223436729',
+	companyName: 'Example Company',
+	ruc: '20345678921'
 };
 
 const user = {
 	name: 'Oscar Antonio',
 	lastname: 'Medina Reyes',
-	dni: '77229991',
-	email: 'omedina.reyes@gmail.com',
+	dni: '12345678',
+	email: 'oscar@hotmail.com',
 	password: '123456',
 	role: 'ADMIN'
 };
@@ -66,6 +69,14 @@ beforeAll(async () => {
 
 	const { body } = await request(testServer.app).post('/api/auth/register').send(user);
 	token = body.data.token;
+
+	//* Crear material
+	const { body: bodyMaterial } = await request(testServer.app)
+		.post('/api/material')
+		.set('Authorization', `Bearer ${token}`)
+		.send(material);
+
+	product.materialId = bodyMaterial.data.id;
 
 	//* Crear categoría
 	const { body: bodyCategory } = await request(testServer.app)
@@ -81,9 +92,13 @@ beforeAll(async () => {
 		.set('Authorization', `Bearer ${token}`)
 		.send(product);
 
-	const supplierID = await prisma.supplier.create({ data: supplier });
+	//* Crear proveedor
+	const { body: bodySupplier } = await request(testServer.app)
+		.post('/api/supplier')
+		.set('Authorization', `Bearer ${token}`)
+		.send(supplier);
 
-	purchase.supplierId = supplierID.id;
+	purchase.supplierId = bodySupplier.data.id;
 	purchase.purchaseDetail[0].productId = bodyProduct.data.id;
 
 	//* Crear compra
@@ -101,6 +116,7 @@ afterAll(async () => {
 	await prisma.purchase.deleteMany();
 	await prisma.supplier.deleteMany();
 	await prisma.product.deleteMany();
+	await prisma.material.deleteMany();
 	await prisma.category.deleteMany();
 
 	testServer.close();

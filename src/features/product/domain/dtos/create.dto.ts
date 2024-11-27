@@ -5,8 +5,8 @@ interface CreateProductDtoProps {
 	name: string;
 	description: string;
 	categoryId: number;
+	materialId: number;
 	image: string;
-	material: string;
 }
 
 export class CreateProductDto implements CoreDto<CreateProductDto> {
@@ -14,15 +14,15 @@ export class CreateProductDto implements CoreDto<CreateProductDto> {
 		public readonly name: string,
 		public readonly description: string,
 		public readonly categoryId: number,
-		public readonly image: string,
-		public readonly material: string
+		public readonly materialId: number,
+		public readonly image: string
 	) {
 		this.validate(this);
 	}
 
 	public validate(dto: CreateProductDto): void {
 		const errors: ValidationType[] = [];
-		const { name, description, categoryId, image, material } = dto;
+		const { name, description, categoryId, image, materialId } = dto;
 
 		if (!name || name.length === ZERO)
 			errors.push({
@@ -48,7 +48,7 @@ export class CreateProductDto implements CoreDto<CreateProductDto> {
 				fields: ['image']
 			});
 
-		if (!material || material.length === ZERO)
+		if (!materialId || materialId <= ZERO)
 			errors.push({
 				constraint: 'El material es obligatorio',
 				fields: ['material']
@@ -58,8 +58,8 @@ export class CreateProductDto implements CoreDto<CreateProductDto> {
 	}
 
 	static create(object: CreateProductDtoProps): CreateProductDto {
-		const { name, description, categoryId, image, material } = object;
+		const { name, description, categoryId, image, materialId } = object;
 
-		return new CreateProductDto(name, description, categoryId, image, material);
+		return new CreateProductDto(name, description, categoryId, materialId, image);
 	}
 }
