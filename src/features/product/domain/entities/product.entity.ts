@@ -1,21 +1,18 @@
 import { CustomError, ZERO } from '../../../../core';
 import { Decimal } from '../../../../data/postgresql';
+import { CategoryEntity } from '../../../category/domain';
 import { MaterialEntity } from '../../../material/domain';
-
-interface CategoryEntityProps {
-	id: number;
-	name: string;
-}
 
 interface ProductEntityProps {
 	id: number;
 	name: string;
 	description: string;
-	category: CategoryEntityProps;
+	category: CategoryEntity;
 	image: string;
 	material: MaterialEntity;
 	price: Decimal;
 	stock: number;
+	purchasePrice: number;
 }
 
 export class ProductEntity {
@@ -23,15 +20,16 @@ export class ProductEntity {
 		public readonly id: number,
 		public readonly name: string,
 		public readonly description: string,
-		public readonly category: CategoryEntityProps,
+		public readonly category: CategoryEntity,
 		public readonly image: string,
 		public readonly material: MaterialEntity,
 		public readonly price: Decimal,
-		public readonly stock: number
+		public readonly stock: number,
+		public readonly purchasePrice: number
 	) {}
 
 	static fromObject(object: ProductEntityProps): ProductEntity {
-		const { id, name, description, category, image, material, price, stock } = object;
+		const { id, name, description, category, image, material, price, stock, purchasePrice } = object;
 
 		if (!id)
 			throw CustomError.badRequest('This entity requires an id', [{ constraint: 'id is required', fields: ['id'] }]);
@@ -95,6 +93,6 @@ export class ProductEntity {
 				{ constraint: 'stock is required', fields: ['stock'] }
 			]);
 
-		return new ProductEntity(id, name, description, category, image, material, price, stock);
+		return new ProductEntity(id, name, description, category, image, material, price, stock, purchasePrice);
 	}
 }

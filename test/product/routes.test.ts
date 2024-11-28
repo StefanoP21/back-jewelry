@@ -76,7 +76,8 @@ describe('Testing product routes', () => {
 				image: expect.any(String),
 				material: expect.any(Object),
 				price: expect.any(String),
-				stock: expect.any(Number)
+				stock: expect.any(Number),
+				purchasePrice: expect.any(Number)
 			}
 		});
 	});
@@ -99,7 +100,8 @@ describe('Testing product routes', () => {
 				image: expect.any(String),
 				material: expect.any(Object),
 				price: expect.any(String),
-				stock: expect.any(Number)
+				stock: expect.any(Number),
+				purchasePrice: expect.any(Number)
 			}
 		});
 	});
@@ -132,7 +134,8 @@ describe('Testing product routes', () => {
 				image: expect.any(String),
 				material: expect.any(Object),
 				price: expect.any(String),
-				stock: expect.any(Number)
+				stock: expect.any(Number),
+				purchasePrice: expect.any(Number)
 			}
 		});
 	});
