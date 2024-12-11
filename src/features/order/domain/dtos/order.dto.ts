@@ -52,7 +52,7 @@ export class OrderDto implements CoreDto<OrderDtoProps> {
 				fields: ['paymentMethod']
 			});
 
-		if (!totalDesc || parseFloat(totalDesc.toString()) < ZERO)
+		if (totalDesc == undefined || parseFloat(totalDesc.toString()) < ZERO)
 			errors.push({
 				constraint: 'El total con descuento es obligatorio',
 				fields: ['totalDesc']

@@ -138,6 +138,13 @@ export class PurchaseDatasourceImpl implements PurchaseDatasource {
 		try {
 			const { id: purchaseId } = await this.getById(id);
 
+			const refunds = await prisma.refund.findMany({ where: { purchaseId } });
+			if (refunds.length > 0) {
+				throw CustomError.badRequest(
+					`La compra con id ${purchaseId} tiene devoluciones registradas y no puede ser eliminado.`
+				);
+			}
+
 			const deletedPurchase = await prisma.purchase.delete({
 				where: { id: purchaseId },
 				include: {

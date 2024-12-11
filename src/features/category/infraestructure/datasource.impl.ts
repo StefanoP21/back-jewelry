@@ -50,6 +50,14 @@ export class CategoryDatasourceImpl implements CategoryDatasource {
 	async delete(id: number): Promise<CategoryEntity> {
 		try {
 			const { id: categoryId } = await this.getById(id);
+
+			const products = await prisma.product.findMany({ where: { categoryId } });
+			if (products.length > 0) {
+				throw CustomError.badRequest(
+					`La categoría con id ${categoryId} tiene productos registrados y no puede ser eliminado.`
+				);
+			}
+
 			const deletedCategory = await prisma.category.delete({ where: { id: categoryId } });
 			return CategoryEntity.fromObject(deletedCategory);
 		} catch (error) {

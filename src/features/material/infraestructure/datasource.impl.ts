@@ -55,6 +55,13 @@ export class MaterialDatasourceImpl implements MaterialDatasource {
 		try {
 			const { id: materialId } = await this.getById(id);
 
+			const products = await prisma.product.findMany({ where: { materialId } });
+			if (products.length > 0) {
+				throw CustomError.badRequest(
+					`El material con id ${materialId} tiene productos registrados y no puede ser eliminado.`
+				);
+			}
+
 			const deletedMaterial = await prisma.material.delete({ where: { id: materialId } });
 
 			return MaterialEntity.fromObject(deletedMaterial);
