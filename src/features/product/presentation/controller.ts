@@ -24,6 +24,7 @@ interface RequestBody {
 	image: string;
 	materialId: number;
 	price: Decimal;
+	status: boolean;
 }
 
 export class ProductController {
@@ -72,7 +73,7 @@ export class ProductController {
 		next: NextFunction
 	) => {
 		const { id } = req.params;
-		const { name, description, categoryId, image, materialId, price } = req.body;
+		const { name, description, categoryId, image, materialId, price, status } = req.body;
 
 		const updateProductDto = UpdateProductDto.create({
 			id: Number(id),
@@ -81,7 +82,8 @@ export class ProductController {
 			categoryId,
 			image,
 			materialId,
-			price
+			price,
+			status
 		});
 
 		new UpdateProduct(this.repository)

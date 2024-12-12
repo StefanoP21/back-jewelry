@@ -4,3 +4,4 @@ export { UpdatePasswordUser } from './updatepass.use-case';
 export { RenewUser } from './renew.use-case';
 export { DeleteUser } from './delete.use-case';
 export { GetAllUsers } from './getAll.use-case';
+export { UpdateStatusUser } from './updatestatus.use-case';

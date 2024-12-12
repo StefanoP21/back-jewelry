@@ -27,6 +27,10 @@ export class AuthRepositoryImpl implements AuthRepository {
 		return this.datasource.updatePassword(dto);
 	}
 
+	updateStatus(id: number): Promise<unknown> {
+		return this.datasource.updateStatus(id);
+	}
+
 	getAll(): Promise<UserResponseEntity[]> {
 		return this.datasource.getAll();
 	}

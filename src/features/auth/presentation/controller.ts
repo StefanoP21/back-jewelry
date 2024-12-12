@@ -11,7 +11,8 @@ import {
 	UpdatePasswordUserDto,
 	RenewUser,
 	GetAllUsers,
-	DeleteUser
+	DeleteUser,
+	UpdateStatusUser
 } from '../domain';
 import { HttpCode, Role, type SuccessResponse } from '../../../core';
 
@@ -83,6 +84,15 @@ export class AuthController {
 
 		new UpdatePasswordUser(this.repository)
 			.execute(updatePasswordUserDto)
+			.then((result) => res.status(HttpCode.OK).json(result))
+			.catch(next);
+	};
+
+	public updateStatus = (req: Request, res: Response<unknown>, next: NextFunction) => {
+		const { id } = req.params;
+
+		new UpdateStatusUser(this.repository)
+			.execute(Number(id))
 			.then((result) => res.status(HttpCode.OK).json(result))
 			.catch(next);
 	};
