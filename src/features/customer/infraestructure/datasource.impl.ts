@@ -52,6 +52,14 @@ export class CustomerDatasourceImpl implements CustomerDatasource {
 	async delete(id: number): Promise<CustomerEntity> {
 		try {
 			const { id: customerId } = await this.getById(id);
+
+			const orders = await prisma.order.findMany({ where: { customerId } });
+			if (orders.length > 0) {
+				throw CustomError.badRequest(
+					`El cliente con id ${customerId} tiene compras registradas y no puede ser eliminado.`
+				);
+			}
+
 			const deletedCustomer = await prisma.customer.delete({ where: { id: customerId } });
 			return CustomerEntity.fromObject(deletedCustomer);
 		} catch (error) {

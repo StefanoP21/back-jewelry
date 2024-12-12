@@ -36,7 +36,8 @@ describe('Testing auth routes', () => {
 					lastname: user.lastname,
 					dni: user.dni,
 					email: user.email,
-					role: user.role
+					role: user.role,
+					status: expect.any(Boolean)
 				},
 				token: expect.any(String)
 			}
@@ -59,7 +60,8 @@ describe('Testing auth routes', () => {
 					lastname: user.lastname,
 					dni: user.dni,
 					email: user.email,
-					role: user.role
+					role: user.role,
+					status: expect.any(Boolean)
 				},
 				token: expect.any(String)
 			}
@@ -87,7 +89,8 @@ describe('Testing auth routes', () => {
 					lastname: user.lastname,
 					dni: user.dni,
 					email: user.email,
-					role: user.role
+					role: user.role,
+					status: expect.any(Boolean)
 				},
 				token: expect.any(String)
 			}

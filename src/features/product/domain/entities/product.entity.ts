@@ -12,6 +12,7 @@ interface ProductEntityProps {
 	material: MaterialEntity;
 	price: Decimal;
 	stock: number;
+	status: boolean;
 	purchasePrice: number;
 }
 
@@ -25,11 +26,12 @@ export class ProductEntity {
 		public readonly material: MaterialEntity,
 		public readonly price: Decimal,
 		public readonly stock: number,
+		public readonly status: boolean,
 		public readonly purchasePrice: number
 	) {}
 
 	static fromObject(object: ProductEntityProps): ProductEntity {
-		const { id, name, description, category, image, material, price, stock, purchasePrice } = object;
+		const { id, name, description, category, image, material, price, stock, status, purchasePrice } = object;
 
 		if (!id)
 			throw CustomError.badRequest('This entity requires an id', [{ constraint: 'id is required', fields: ['id'] }]);
@@ -93,6 +95,11 @@ export class ProductEntity {
 				{ constraint: 'stock is required', fields: ['stock'] }
 			]);
 
-		return new ProductEntity(id, name, description, category, image, material, price, stock, purchasePrice);
+		if (status === undefined)
+			throw CustomError.badRequest('This entity requires a status', [
+				{ constraint: 'status is required', fields: ['status'] }
+			]);
+
+		return new ProductEntity(id, name, description, category, image, material, price, stock, status, purchasePrice);
 	}
 }

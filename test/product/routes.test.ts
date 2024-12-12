@@ -77,6 +77,7 @@ describe('Testing product routes', () => {
 				material: expect.any(Object),
 				price: expect.any(String),
 				stock: expect.any(Number),
+				status: expect.any(Boolean),
 				purchasePrice: expect.any(Number)
 			}
 		});
@@ -101,6 +102,7 @@ describe('Testing product routes', () => {
 				material: expect.any(Object),
 				price: expect.any(String),
 				stock: expect.any(Number),
+				status: expect.any(Boolean),
 				purchasePrice: expect.any(Number)
 			}
 		});
@@ -135,6 +137,7 @@ describe('Testing product routes', () => {
 				material: expect.any(Object),
 				price: expect.any(String),
 				stock: expect.any(Number),
+				status: expect.any(Boolean),
 				purchasePrice: expect.any(Number)
 			}
 		});

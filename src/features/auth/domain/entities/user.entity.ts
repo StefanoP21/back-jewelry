@@ -8,6 +8,7 @@ interface UserEntityProps {
 	dni: string;
 	password: string;
 	role: Role;
+	status: boolean;
 }
 export class UserEntity {
 	constructor(
@@ -17,11 +18,12 @@ export class UserEntity {
 		public email: string,
 		public dni: string,
 		public password: string,
-		public role: Role
+		public role: Role,
+		public status: boolean
 	) {}
 
 	static fromObject(object: UserEntityProps): UserEntity {
-		const { id, name, lastname, email, dni, password, role } = object;
+		const { id, name, lastname, email, dni, password, role, status } = object;
 
 		if (!id)
 			throw CustomError.badRequest('This entity requires an id', [{ constraint: 'id is required', fields: ['id'] }]);
@@ -54,6 +56,11 @@ export class UserEntity {
 				{ constraint: 'role is required', fields: ['role'] }
 			]);
 
-		return new UserEntity(id, name, lastname, email, dni, password, role);
+		if (status === undefined)
+			throw CustomError.badRequest('This entity requires a status', [
+				{ constraint: 'status is required', fields: ['status'] }
+			]);
+
+		return new UserEntity(id, name, lastname, email, dni, password, role, status);
 	}
 }

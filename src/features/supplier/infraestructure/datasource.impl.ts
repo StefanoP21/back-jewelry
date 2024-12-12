@@ -52,6 +52,14 @@ export class SupplierDatasourceImpl implements SupplierDatasource {
 	async delete(id: number): Promise<SupplierEntity> {
 		try {
 			const { id: supplierId } = await this.getById(id);
+
+			const purchases = await prisma.purchase.findMany({ where: { supplierId } });
+			if (purchases.length > 0) {
+				throw CustomError.badRequest(
+					`El proveedor con id ${supplierId} tiene compras registradas y no puede ser eliminado.`
+				);
+			}
+
 			const deletedSupplier = await prisma.supplier.delete({ where: { id: supplierId } });
 			return SupplierEntity.fromObject(deletedSupplier);
 		} catch (error) {

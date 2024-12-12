@@ -48,6 +48,7 @@ export enum ErrorMessages {
 	USER_NOT_FOUND = 'Usuario no encontrado',
 	USER_ALREADY_REGISTERED = 'Usuario ya registrado',
 	INVALID_CREDENTIALS = 'Credenciales incorrectas',
+	USER_STATUS_INVALID = 'Usuario con estado no valido',
 
 	//* PRODUCT
 	PRODUCT_NOT_FOUND = 'Producto no encontrado',

@@ -57,6 +57,8 @@ export class AuthDatasourceImpl implements AuthDatasource {
 			const user = await prisma.user.findUnique({ where: { dni: dto.dni } });
 			if (!user) throw CustomError.badRequest(ErrorMessages.USER_NOT_FOUND);
 
+			if (!user.status) throw CustomError.badRequest(ErrorMessages.USER_STATUS_INVALID);
+
 			//* validate password
 			const passwordIsValid = this.compare(dto.password, user.password);
 			if (!passwordIsValid) throw CustomError.badRequest(ErrorMessages.INVALID_CREDENTIALS);
@@ -90,6 +92,20 @@ export class AuthDatasourceImpl implements AuthDatasource {
 		} catch (error) {
 			if (error instanceof CustomError) throw error;
 			throw CustomError.internalServer(`Error al actualizar la contraseña: ${error}`);
+		}
+	}
+
+	async updateStatus(id: number): Promise<unknown> {
+		try {
+			const user = await prisma.user.findUnique({ where: { id: id } });
+			if (!user) throw CustomError.badRequest(ErrorMessages.USER_NOT_FOUND);
+
+			await prisma.user.update({ where: { id: user.id }, data: { status: !user.status } });
+
+			return { message: 'Estado del usuario actualizado' };
+		} catch (error) {
+			if (error instanceof CustomError) throw error;
+			throw CustomError.internalServer(`Error al actualizar el estado: ${error}`);
 		}
 	}
 
